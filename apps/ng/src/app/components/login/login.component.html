@@ -1,0 +1,11 @@
+<form [formGroup]="loginForm" (ngSubmit)="login()" class="form max-w-lg mx-auto my-10">
+    <h3 class="font-bold text-3xl text-accent mb-5">Log in to Trello</h3>
+    <app-input name="Email" [field]="email"></app-input>
+    <app-input name="Password" [field]="password" type="password" [minLength]="3"></app-input>
+    <div class="flex justify-end">
+        <button class="btn btn-primary">Login</button>
+    </div>
+    <p>do not have an account? <strong class="underline my-5 cursor-pointer"><a
+                routerLink="/auth/register">register</a></strong> instead</p>
+    <app-alert *ngIf="error">{{ error }} </app-alert>
+</form>

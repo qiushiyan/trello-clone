@@ -4,6 +4,8 @@ import { Error as MongooseError } from "mongoose";
 import { UserDocument } from "../types/user.interface";
 import jwt from "jsonwebtoken";
 import {
+  EmailExistsInput,
+  EmailExistsRequest,
   ExpressRequest,
   LoginRequest,
   RegisterInput,
@@ -25,9 +27,9 @@ const normalizeUser = (user: UserDocument) => {
 
 export const currentUser = async (req: ExpressRequest, res: Response) => {
   if (req.user) {
-    res.send(normalizeUser(req.user));
+    return res.json(normalizeUser(req.user));
   } else {
-    res.sendStatus(401).json({ message: "login to see the current user" });
+    return res.status(401).json({ message: "login to see the current user" });
   }
 };
 
@@ -43,10 +45,21 @@ export const login = async (
   }
 
   if (await user.validatePassword(password)) {
-    res.send(normalizeUser(user));
+    return res.send(normalizeUser(user));
   } else {
     return res.status(422).json({ message: "Wrong password" });
   }
+};
+
+export const emailExists = async (
+  req: EmailExistsRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = await User.findOne({
+    email: req.body.email,
+  });
+  return res.json({ exists: !!user });
 };
 
 export const register = async (
@@ -62,7 +75,7 @@ export const register = async (
       password,
     });
     const userDoc = await user.save();
-    res.status(201).json(normalizeUser(userDoc));
+    return res.status(201).json(normalizeUser(userDoc));
   } catch (err: any) {
     if (err instanceof MongooseError.ValidationError) {
       const message = Object.values(err.errors)
@@ -72,10 +85,11 @@ export const register = async (
     }
     // special case foro non-unique error
     if (err.name === "MongoServerError" && err.code === 11000) {
-      console.log(err);
-      return res.send({ message: "Email is already registered" });
+      return res.status(422).json({ message: "Email is already registered" });
     }
 
-    next(err);
+    return res
+      .status(400)
+      .json({ message: "Iynternal server error, try again later" });
   }
 };

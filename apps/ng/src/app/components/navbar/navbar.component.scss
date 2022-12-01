@@ -1,0 +1,6 @@
+nav ul li {
+  @apply hover:bg-accent transition p-3 rounded-md flex;
+  a {
+    @apply flex gap-1 items-center;
+  }
+}
