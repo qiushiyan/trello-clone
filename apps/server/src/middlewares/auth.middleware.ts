@@ -22,6 +22,6 @@ export default async (
     req.user = user;
     next();
   } catch (err: any) {
-    res.sendStatus(401).json({ message: err.message });
+    return res.status(401).json({ message: err.message });
   }
 };

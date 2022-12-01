@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InputComponent } from '../input/input.component';
+import { InputComponent } from '../../components/input/input.component';
 import {
   FormControl,
   Validators,
@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { AlertComponent } from '../alert/alert.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 import { EmailExistsValidator } from 'src/app/auth/validators/email';
 import { HttpErrorResponse } from '@angular/common/http';
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
-import { CurrentUser } from '../types/currentUser.interface';
+import { CurrentUser } from '../types/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { LoginRequest, RegisterRequest } from '../types/request.interface';
@@ -24,6 +24,11 @@ export class AuthService {
 
   login(req: LoginRequest): Observable<CurrentUser> {
     return this.http.post<CurrentUser>(environment.api.auth.loginUrl, req);
+  }
+
+  logout() {
+    this.setCurrentUser(null);
+    localStorage.removeItem('token');
   }
 
   isEmailExists(email: string) {

@@ -14,6 +14,9 @@ export const environment = {
       registerUrl: `${apiBaseUrl}/users/new`,
       isEmailExistsUrl: `${apiBaseUrl}/users/email-exists`,
     },
+    boards: {
+      getBoardsUrl: `${apiBaseUrl}/boards`,
+    },
   },
 };
 

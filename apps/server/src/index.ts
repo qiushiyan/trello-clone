@@ -6,6 +6,7 @@ import { startDb } from "./db";
 import dotenv from "dotenv";
 import cors from "cors";
 import { authRouter } from "./routers/auth.router";
+import { boardRouter } from "./routers/board.router";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ const port = process.env.PORT || 8080;
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/api/users", authRouter);
+app.use("/api/boards", boardRouter);
 
 app.get("/", (req, res) => {
   return res.send("hello world");

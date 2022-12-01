@@ -12,15 +12,17 @@ import {
   RegisterRequest,
 } from "../types/request.interface";
 
-const normalizeUser = (user: UserDocument) => {
+export const normalizeUser = (user: UserDocument) => {
   const token = jwt.sign(
     { id: user._id, email: user.email, username: user.username },
     process.env.JWT_SECRET!
   );
   return {
+    id: user._id,
     email: user.email,
     username: user.username,
-    id: user._id,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
     token,
   };
 };
