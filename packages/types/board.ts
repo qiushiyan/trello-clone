@@ -1,6 +1,10 @@
-// this is the unnormalized board d
+export interface CreateBoardInput {
+  title: string;
+  description?: string;
+}
+
 export interface Board {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
   userId: string;

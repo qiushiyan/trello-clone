@@ -5,9 +5,19 @@
                     home
                 </span>Home</a></li>
         <ng-container *ngIf="user; else authLinks">
-            <li><a routerLink="/boards"><span class="material-symbols-outlined">
+            <li>
+                <a routerLink="/boards/638922a11bd905bba0b027e0">
+                    <span class="material-symbols-outlined">
                         dashboard
-                    </span>{{ user.username }}</a></li>
+                    </span>
+                    Board
+                </a>
+            </li>
+            <li class="avatar cursor-pointer" routerLink="/boards">
+                <div class="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <img src="https://avatars.dicebear.com/api/initials/ + {{user.username}}.svg" />
+                </div>
+            </li>
         </ng-container>
 
     </ul>

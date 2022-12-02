@@ -1,7 +1,12 @@
 import { NextFunction, Response } from "express";
 import Board from "../models/board.schema";
 import { BoardDcoument } from "../types/board.interface";
-import { CreateBoardRequest, ExpressRequest } from "../types/request.interface";
+import {
+  CreateBoardRequest,
+  ExpressRequest,
+  GetBoardRequest,
+} from "../types/request.interface";
+import { Error as MongooseError } from "mongoose";
 
 const normalizeBoard = (board: BoardDcoument) => {
   return {
@@ -19,19 +24,47 @@ export const list = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    if (req.user) {
+  if (req.user) {
+    try {
       const boards = (await Board.find({ userId: req.user._id })).map(
         normalizeBoard
       );
       return res.json(boards);
-    } else {
-      return res.status(401).json({ message: "Login to view your boards" });
+    } catch (any) {
+      return res.status(401).json({
+        message: "Internal error fetching your boards, try again later",
+      });
     }
-  } catch (any) {
-    return res.status(401).json({
-      message: "Internal error fetching your boards, try again later",
-    });
+  } else {
+    res.status(401).json({ message: "Login to view boards" });
+  }
+};
+
+export const get = async (
+  req: GetBoardRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.user) {
+    try {
+      const board = await Board.findById(req.params.id);
+      console.log(board?.userId, req.user._id);
+      if (board && board.userId.toString() === req.user._id.toString()) {
+        return res.json(normalizeBoard(board));
+      } else {
+        return res.status(404).json({ message: "Board not found" });
+      }
+    } catch (err: any) {
+      if (err instanceof MongooseError.CastError) {
+        return res.status(404).json({ message: "Board not found" });
+      } else {
+        return res.status(401).json({
+          message: "Internal error creating your board, try again later",
+        });
+      }
+    }
+  } else {
+    return res.status(401).json({ message: "Login to view a board" });
   }
 };
 
@@ -40,19 +73,19 @@ export const create = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    if (req.user) {
+  if (req.user) {
+    try {
       const board = await Board.create({
         ...req.body,
         userId: req.user._id,
       });
       return res.json(normalizeBoard(board));
-    } else {
-      return res.status(401).json({ message: "Login to create a new board" });
+    } catch (any) {
+      return res.status(401).json({
+        message: "Internal error creating your board, try again later",
+      });
     }
-  } catch (any) {
-    return res.status(401).json({
-      message: "Internal error creating your board, try again later",
-    });
+  } else {
+    return res.status(401).json({ message: "Login to create a new board" });
   }
 };

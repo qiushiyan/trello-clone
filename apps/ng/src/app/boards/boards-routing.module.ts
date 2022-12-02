@@ -10,6 +10,11 @@ const routes: Routes = [
         (m) => m.BoardGridComponent
       ),
   },
+  {
+    path: ':boardId',
+    loadComponent: () =>
+      import('./board/board.component').then((m) => m.BoardComponent),
+  },
 ];
 
 @NgModule({

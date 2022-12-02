@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
-import { CurrentUser } from '../types/user.interface';
+import { CurrentUser } from '@trello-clone/types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { LoginRequest, RegisterRequest } from '../types/request.interface';
+import { LoginInput, RegisterInput } from '@trello-clone/types';
 @Injectable({
   providedIn: 'root',
 })
@@ -18,11 +18,11 @@ export class AuthService {
     return this.http.get<CurrentUser>(environment.api.auth.currentUserUrl);
   }
 
-  register(req: RegisterRequest): Observable<CurrentUser> {
+  register(req: RegisterInput): Observable<CurrentUser> {
     return this.http.post<CurrentUser>(environment.api.auth.registerUrl, req);
   }
 
-  login(req: LoginRequest): Observable<CurrentUser> {
+  login(req: LoginInput): Observable<CurrentUser> {
     return this.http.post<CurrentUser>(environment.api.auth.loginUrl, req);
   }
 

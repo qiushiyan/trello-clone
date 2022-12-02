@@ -17,6 +17,7 @@ export class InputComponent implements OnInit {
   @Input() type: string = 'text'; // input type
   @Input() required: boolean = true; // if the field is required
   @Input() minLength: number = 0; // if the field has a mininum length
+  @Input() inline = false; // styles for inline form
   @Input() ariaLabel: string = '';
   @Input() extClass: string = '';
 

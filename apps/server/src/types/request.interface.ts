@@ -1,24 +1,14 @@
-import type { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { UserDocument } from "./user.interface";
+import {
+  CreateBoardInput,
+  LoginInput,
+  RegisterInput,
+  EmailExistsInput,
+} from "@trello-clone/types";
 
-export interface RegisterInput {
-  email: string;
-  username: string;
-  password: string;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-export interface EmailExistsInput {
-  email: string;
-}
-
-export interface CreateBoardInput {
-  title: string;
-  description?: string;
+export interface ExpressRequest extends Request {
+  user?: UserDocument;
 }
 
 export type LoginRequest = Request<any, any, LoginInput, any>;
@@ -27,6 +17,6 @@ export type EmailExistsRequest = Request<any, any, EmailExistsInput, any>;
 export type CreateBoardRequest = Request<any, any, CreateBoardInput, any> & {
   user?: UserDocument;
 };
-export interface ExpressRequest extends Request {
+export type GetBoardRequest = Request<{ id: string }, any, any, any> & {
   user?: UserDocument;
-}
+};

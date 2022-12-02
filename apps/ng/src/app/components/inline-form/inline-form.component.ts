@@ -1,27 +1,67 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { InlineFormFields } from 'src/app/types/inline-form.interface';
+import { InputComponent } from '../input/input.component';
 
 @Component({
   selector: 'app-inline-form',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule, InputComponent],
   templateUrl: './inline-form.component.html',
   styleUrls: ['./inline-form.component.scss'],
   standalone: true,
 })
 export class InlineFormComponent implements OnInit {
-  @Input() title: string = '';
-  @Input() placeholder: string = 'not defined';
-  @Input() hasButton = false;
-  @Input() buttonText = 'Submit';
+  @Input() fields!: InlineFormFields;
+  @Input() hasButton = true;
   @Output() handleSubmit = new EventEmitter();
 
   isEditting = false;
+  controls: Record<string, FormControl> = {};
 
-  toggleEditting() {
-    this.isEditting = !this.isEditting;
+  form = new FormGroup({});
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.fields.forEach((field) => {
+      const validators = [];
+      if (field['required']) {
+        validators.push(Validators.required);
+      }
+      if (field['minLength']) {
+        validators.push(Validators.minLength(field['minLength']!));
+      }
+      const control = new FormControl('', validators);
+      control.patchValue(field['defaultValue']);
+      this.controls[field['name']] = control;
+      this.form.addControl(field['name'], control);
+    });
   }
 
-  constructor() {}
+  activeEditting() {
+    if (!this.isEditting) {
+      this.isEditting = true;
+    }
+  }
 
-  ngOnInit(): void {}
+  cancel() {
+    this.isEditting = false;
+    this.form.reset();
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    if (this.form.dirty) {
+      this.handleSubmit.emit(this.form.value);
+    }
+    this.isEditting = false;
+    this.form.reset();
+  }
 }

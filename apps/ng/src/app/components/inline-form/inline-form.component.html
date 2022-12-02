@@ -1,9 +1,17 @@
-<div class="flex max-w-xs justify-center mx-auto" (click)="toggleEditting()">
+<div class="flex max-w-xs justify-center mx-auto" (click)="activeEditting()">
     <ng-container *ngIf="!isEditting; else form">
         this is normal text
     </ng-container>
 </div>
 
 <ng-template #form>
-    this is the inlien form
+    <form class="flex flex-col gap-1">
+        <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
+            [type]="field['type']" [inline]="true"></app-input>
+        <div class="flex items-center" *ngIf="hasButton">
+            <button class=" btn btn-primary text-sm sblock mr-2 normal-case" *ngIf="hasButton"
+                (click)="onSubmit($event)">Save</button>
+            <button class="btn btn-ghost text-sm normal-case" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
 </ng-template>

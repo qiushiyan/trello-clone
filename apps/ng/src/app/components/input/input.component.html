@@ -1,5 +1,5 @@
 <div class="mb-3">
-    <label class="label text-xl">{{ name }}</label>
+    <label class="label text-lg" *ngIf="!inline">{{ name }}</label>
     <input [type]="type" [formControl]="field" [placeholder]="placeholder" [class]="inputClass"
         [attr.aria-label]="ariaLabel" />
     <ng-container *ngIf="isChanged()">

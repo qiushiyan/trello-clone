@@ -1,1 +1,12 @@
-<p>board works!</p>
+<div class="board-container grid grid-cols-4 w-full p-5">
+    <!-- sidebar -->
+    <div class="grid col-span-1">
+        <h3 class="font-bold text-2xl">{{ (authService.currentUser$ | async)?.username }}</h3>
+    </div>
+
+    <!-- board -->
+    <div class="col-span-3">
+        <app-alert *ngIf="error">{{ error }}</app-alert>
+        <app-inline-form [fields]="createBoardFields"></app-inline-form>
+    </div>
+</div>

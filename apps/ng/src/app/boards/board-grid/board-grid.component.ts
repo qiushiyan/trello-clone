@@ -3,16 +3,36 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { BoardsService } from 'src/app/services/boards.service';
-import { InlineFormComponent } from 'src/app/components/inline-form/inline-form.component';
+import { InlineFormFields } from 'src/app/types/inline-form.interface';
+import { Board } from '@trello-clone/types';
+import { BoardComponent } from '../board/board.component';
 
 @Component({
   selector: 'app-board-grid',
   standalone: true,
-  imports: [CommonModule, InlineFormComponent],
+  imports: [CommonModule, BoardComponent],
   templateUrl: './board-grid.component.html',
   styleUrls: ['./board-grid.component.scss'],
 })
 export class BoardGridComponent implements OnInit {
+  boards: Board[] = [];
+  createBoardFields: InlineFormFields = [
+    {
+      name: 'name',
+      required: true,
+      type: 'text',
+      minLength: 3,
+      defaultValue: 'name',
+    },
+    {
+      name: 'description',
+      required: false,
+      type: 'text',
+      minLength: 3,
+      defaultValue: 'description',
+    },
+  ];
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -26,6 +46,8 @@ export class BoardGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.boardsService.getBoards().subscribe(console.log);
+    this.boardsService.gaetBoards().subscribe((boards) => {
+      this.boards = boards;
+    });
   }
 }

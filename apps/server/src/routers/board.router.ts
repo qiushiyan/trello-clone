@@ -6,6 +6,7 @@ import * as BoardController from "../controllers/board.controller";
 const boardRouter = Router();
 
 boardRouter.use(authMiddleware);
+boardRouter.get("/:id", BoardController.get);
 boardRouter.get("/", BoardController.list);
 boardRouter.post("/new", BoardController.create);
 

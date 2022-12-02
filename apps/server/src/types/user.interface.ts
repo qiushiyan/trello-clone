@@ -1,12 +1,5 @@
 import type { Document } from "mongoose";
-
-export interface User {
-  email: string;
-  username: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { User } from "@trello-clone/types";
 
 export interface UserDocument extends User, Document {
   validatePassword(password: string): Promise<boolean>;
