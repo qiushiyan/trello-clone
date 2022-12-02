@@ -1,0 +1,9 @@
+<div class="flex max-w-xs justify-center mx-auto" (click)="toggleEditting()">
+    <ng-container *ngIf="!isEditting; else form">
+        this is normal text
+    </ng-container>
+</div>
+
+<ng-template #form>
+    this is the inlien form
+</ng-template>
