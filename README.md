@@ -2,7 +2,7 @@ my ever-growing implementation of trello in many frameworks
 
 ## Frontend
 
-- Angular 14: [`ng`](https://github.com/qiushiyan/trello-clone/tree/main/apps/ng)
+- Angular 15: [`ng`](https://github.com/qiushiyan/trello-clone/tree/main/apps/ng)
 
 ## Backend
 
