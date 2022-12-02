@@ -7,3 +7,7 @@ my ever-growing implementation of trello in many frameworks
 ## Backend
 
 - Express: [`server`](https://github.com/qiushiyan/trello-clone/tree/main/apps/server)
+
+## Shared
+
+- type definitions: [`types`](https://github.com/qiushiyan/trello-clone/tree/main/packages/types)
