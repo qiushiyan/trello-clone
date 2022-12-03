@@ -1,5 +1,4 @@
-<nav class="navbar bg-base-200 max-w-lg rounded-box mx-auto mt-5">
-
+<nav class="navbar bg-base-200 max-w-lg rounded-box mx-auto mb-5">
     <ul class="flex justify-center rounded-md w-full gap-4">
         <li><a routerLink="/"><span class="material-symbols-outlined">
                     home
@@ -19,7 +18,14 @@
                 </div>
             </li>
         </ng-container>
-
+        <li class="cursor-pointer" (click)="switchTheme(theme)">
+            <span *ngIf="theme === 'cupcake'" class="material-symbols-outlined">
+                dark_mode
+            </span>
+            <span *ngIf="theme === 'dracula'" class="material-symbols-outlined">
+                light_mode
+            </span>
+        </li>
     </ul>
 </nav>
 

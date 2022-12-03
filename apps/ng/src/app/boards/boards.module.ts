@@ -4,7 +4,6 @@ import { BoardsRoutingModule } from './boards-routing.module';
 import { BoardsService } from '../services/boards.service';
 
 @NgModule({
-  declarations: [],
   imports: [CommonModule, BoardsRoutingModule],
   providers: [BoardsService],
 })

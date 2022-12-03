@@ -1,11 +1,11 @@
-<div class="flex max-w-xs justify-center mx-auto" (click)="activeEditting()">
+<div class="flex max-w-xs justify-center items-center mx-auto h-full" (click)="activeEditting()">
     <ng-container *ngIf="!isEditting; else form">
-        this is normal text
+        <ng-content></ng-content>
     </ng-container>
 </div>
 
 <ng-template #form>
-    <form class="flex flex-col gap-1" (submit)="onSubmit($event)">
+    <form class="flex flex-col gap-1 items-center " (submit)="onSubmit($event)">
         <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
             [type]="field['type']" [inline]="true" [placeholder]="field['placeholder']"></app-input>
         <div class="flex items-center" *ngIf="hasButton">

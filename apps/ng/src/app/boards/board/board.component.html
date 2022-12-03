@@ -1,12 +1,16 @@
-<div class="board-container grid grid-cols-4 w-full p-5">
+<div class="board-container lg:grid lg:grid-cols-12 w-full p-5 min-h-screen">
     <!-- sidebar -->
-    <div class="grid col-span-1">
+    <div class="hidden lg:block lg:visible lg:col-span-2 lg:bordered lg:border-r-4">
         <h3 class="font-bold text-2xl">{{ (authService.currentUser$ | async)?.username }}</h3>
     </div>
 
     <!-- board -->
-    <div class="col-span-3">
+    <div class="w-full lg:col-span-10">
         <app-alert *ngIf="error">{{ error }}</app-alert>
-        <app-inline-form [fields]="createBoardFields"></app-inline-form>
+        <ng-container *ngIf="!error">
+            <app-inline-form [fields]="createBoardFields">
+                <p>hello world</p>
+            </app-inline-form>
+        </ng-container>
     </div>
 </div>

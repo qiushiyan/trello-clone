@@ -1,13 +1,22 @@
-<div class="boards-container w-full p-5">
-    <pre>
-        {{ boards | json }}
-    </pre>
-
+<div class="boards-container max-w-6xl min-h-screen mx-auto">
+    <h2 class="font-bold text-3xl mb-5">My boards</h2>
+    <div class="w-full grid grid-cols-4">
+        <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
+            [hasButton]="false">
+            <div class="card w-64 bg-info text-primary-content shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title justify-center">Create new board</h2>
+                </div>
+            </div>
+        </app-inline-form>
+        <app-board-card *ngFor="let board of boards" [title]="board.title"></app-board-card>
+    </div>
 
     <div class="dropdown dropdown-right dropdown-end">
         <label tabindex="0" class="btn m-1">Click</label>
         <div tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-80">
             <app-inline-form [fields]="createBoardFields" [alwaysEditting]="true" (handleSubmit)="createBoard($event)">
+                <p>hello world</p>
             </app-inline-form>
         </div>
     </div>

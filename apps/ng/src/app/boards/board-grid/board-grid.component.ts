@@ -7,11 +7,17 @@ import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { Board, CreateBoardInput } from '@trello-clone/types';
 import { BoardComponent } from '../board/board.component';
 import { InlineFormComponent } from 'src/app/components/inline-form/inline-form.component';
+import { BoardCardComponent } from '../board-card/board-card.component';
 
 @Component({
   selector: 'app-board-grid',
   standalone: true,
-  imports: [CommonModule, BoardComponent, InlineFormComponent],
+  imports: [
+    CommonModule,
+    BoardComponent,
+    InlineFormComponent,
+    BoardCardComponent,
+  ],
   templateUrl: './board-grid.component.html',
   styleUrls: ['./board-grid.component.scss'],
 })
@@ -22,13 +28,7 @@ export class BoardGridComponent implements OnInit {
       name: 'title',
       required: true,
       type: 'text',
-      defaultValue: 'name',
-    },
-    {
-      name: 'description',
-      required: false,
-      type: 'textarea',
-      placeholder: 'description of the board',
+      placeholder: 'board title',
     },
   ];
 
