@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { AppTheme } from '@trello-clone/types';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -10,13 +11,19 @@ export class ThemeService {
     localStorage.getItem('theme') || 'cupcake'
   );
 
-  constructor() {}
-
-  switchTheme(theme: 'cupcake' | 'dracula') {
-    const nextTheme = theme === 'cupcake' ? 'dracula' : 'cupcake';
-    this.currentTheme$.next(nextTheme);
+  constructor() {
     const body = document.querySelector('body');
-    body!.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    body!.setAttribute(
+      'data-theme',
+      localStorage.getItem('theme') || 'cupcake'
+    );
+  }
+
+  switchTheme(theme: AppTheme) {
+    const nextTheme = theme === 'cupcake' ? 'dracula' : 'cupcake';
+    const body = document.querySelector('body');
+    body!.setAttribute('data-theme', nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    this.currentTheme$.next(nextTheme);
   }
 }

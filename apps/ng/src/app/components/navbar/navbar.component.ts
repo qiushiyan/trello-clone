@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { CurrentUser } from '@trello-clone/types';
+import { CurrentUser, AppTheme } from '@trello-clone/types';
 import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 })
 export class NavbarComponent implements OnInit {
   user: CurrentUser | null = null;
-  theme?: 'cupcake' | 'dracula';
+  theme!: AppTheme;
   constructor(
     private authService: AuthService,
     public themeService: ThemeService
@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  switchTheme(theme: 'cupcake' | 'dracula' | undefined) {
-    this.themeService.switchTheme(theme ?? 'cupcake');
+  switchTheme(theme: AppTheme) {
+    this.themeService.switchTheme(theme);
   }
 }
