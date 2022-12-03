@@ -5,13 +5,12 @@
 </div>
 
 <ng-template #form>
-    <form class="flex flex-col gap-1">
+    <form class="flex flex-col gap-1" (submit)="onSubmit($event)">
         <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
-            [type]="field['type']" [inline]="true"></app-input>
+            [type]="field['type']" [inline]="true" [placeholder]="field['placeholder']"></app-input>
         <div class="flex items-center" *ngIf="hasButton">
-            <button class=" btn btn-primary text-sm sblock mr-2 normal-case" *ngIf="hasButton"
-                (click)="onSubmit($event)">Save</button>
-            <button class="btn btn-ghost text-sm normal-case" (click)="cancel()">Cancel</button>
+            <button class=" btn btn-primary text-sm sblock mr-2 normal-case" *ngIf="hasButton">Save</button>
+            <button class="btn btn-ghost text-sm normal-case" (click)="cancel($event)">Cancel</button>
         </div>
     </form>
 </ng-template>

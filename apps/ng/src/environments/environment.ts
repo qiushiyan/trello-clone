@@ -16,6 +16,7 @@ export const environment = {
     },
     boards: {
       getBoardsUrl: `${apiBaseUrl}/boards`,
+      createBoardUrl: `${apiBaseUrl}/boards/new`,
     },
   },
 };

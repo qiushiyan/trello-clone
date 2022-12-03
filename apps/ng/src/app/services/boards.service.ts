@@ -8,6 +8,7 @@ import { Board, CreateBoardInput } from '@trello-clone/types';
 })
 export class BoardsService {
   constructor(private http: HttpClient) {}
+  boards: Board[] = [];
 
   gaetBoards() {
     return this.http.get<[]>(environment.api.boards.getBoardsUrl);
@@ -20,6 +21,6 @@ export class BoardsService {
   }
 
   createBoard(input: CreateBoardInput) {
-    return this.http.post<Board>(environment.api.boards.getBoardsUrl, input);
+    return this.http.post<Board>(environment.api.boards.createBoardUrl, input);
   }
 }

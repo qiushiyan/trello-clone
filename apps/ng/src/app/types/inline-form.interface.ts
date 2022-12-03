@@ -1,7 +1,8 @@
 export type InlineFormField = {
   name: string;
-  defaultValue: string;
   required: boolean;
+  defaultValue?: string;
+  placeholder?: string;
   type: 'text' | 'email' | 'password' | 'textarea';
   minLength?: number;
 };

@@ -48,7 +48,6 @@ export const get = async (
   if (req.user) {
     try {
       const board = await Board.findById(req.params.id);
-      console.log(board?.userId, req.user._id);
       if (board && board.userId.toString() === req.user._id.toString()) {
         return res.json(normalizeBoard(board));
       } else {
@@ -80,7 +79,8 @@ export const create = async (
         userId: req.user._id,
       });
       return res.json(normalizeBoard(board));
-    } catch (any) {
+    } catch (err: any) {
+      console.log(err);
       return res.status(401).json({
         message: "Internal error creating your board, try again later",
       });

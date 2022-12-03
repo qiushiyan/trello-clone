@@ -13,7 +13,7 @@ import { AlertComponent } from '../alert/alert.component';
 export class InputComponent implements OnInit {
   @Input() field!: FormControl;
   @Input() name!: string; // used as form control name, also as label text
-  @Input() placeholder: string = ''; // input placeholder text
+  @Input() placeholder?: string = ''; // input placeholder text
   @Input() type: string = 'text'; // input type
   @Input() required: boolean = true; // if the field is required
   @Input() minLength: number = 0; // if the field has a mininum length

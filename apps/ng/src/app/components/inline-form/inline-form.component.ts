@@ -21,7 +21,7 @@ export class InlineFormComponent implements OnInit {
   @Input() fields!: InlineFormFields;
   @Input() hasButton = true;
   @Output() handleSubmit = new EventEmitter();
-
+  @Input() alwaysEditting = false;
   isEditting = false;
   controls: Record<string, FormControl> = {};
 
@@ -30,6 +30,10 @@ export class InlineFormComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    if (this.alwaysEditting) {
+      this.isEditting = true;
+    }
+
     this.fields.forEach((field) => {
       const validators = [];
       if (field['required']) {
@@ -39,7 +43,9 @@ export class InlineFormComponent implements OnInit {
         validators.push(Validators.minLength(field['minLength']!));
       }
       const control = new FormControl('', validators);
-      control.patchValue(field['defaultValue']);
+      if (field['defaultValue']) {
+        control.patchValue(field['defaultValue']);
+      }
       this.controls[field['name']] = control;
       this.form.addControl(field['name'], control);
     });
@@ -51,8 +57,11 @@ export class InlineFormComponent implements OnInit {
     }
   }
 
-  cancel() {
-    this.isEditting = false;
+  cancel(event: Event) {
+    event.preventDefault();
+    if (!this.alwaysEditting) {
+      this.isEditting = false;
+    }
     this.form.reset();
   }
 
@@ -61,7 +70,9 @@ export class InlineFormComponent implements OnInit {
     if (this.form.dirty) {
       this.handleSubmit.emit(this.form.value);
     }
-    this.isEditting = false;
+    if (!this.alwaysEditting) {
+      this.isEditting = false;
+    }
     this.form.reset();
   }
 }

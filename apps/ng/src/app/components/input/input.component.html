@@ -1,6 +1,6 @@
 <div class="mb-3">
     <label class="label text-lg" *ngIf="!inline">{{ name }}</label>
-    <input [type]="type" [formControl]="field" [placeholder]="placeholder" [class]="inputClass"
+    <input [type]="type" [formControl]="field" [placeholder]="placeholder ? placeholder : ''" [class]="inputClass"
         [attr.aria-label]="ariaLabel" />
     <ng-container *ngIf="isChanged()">
         <app-alert *ngIf="isRequired()">
