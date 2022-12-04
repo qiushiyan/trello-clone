@@ -5,6 +5,7 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
-export declare type CurrentUser = User & {
+export declare type CurrentUser = Omit<User, "password"> & {
+    id: string;
     token: string;
 };

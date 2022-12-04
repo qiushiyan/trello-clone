@@ -7,11 +7,23 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { authRouter } from "./routers/auth.router";
 import { boardRouter } from "./routers/board.router";
+import * as BoardController from "./controllers/board.controller";
+import {
+  ClientEvents,
+  ClientToServerEvents,
+  ServerToClientEvents,
+  SocketIOServer,
+} from "@trello-clone/types";
+import socketioMiddleware from "./middlewares/socketio.middleware";
 
 dotenv.config();
 const app = express();
 const httpServer = createServer(app);
-// const io = new Server(httpServer, {});
+const io: SocketIOServer = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:4200",
+  },
+});
 const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
@@ -23,9 +35,15 @@ app.get("/", (req, res) => {
   return res.send("hello world");
 });
 
-// io.on("connection", (socket) => {
-//   console.log(`websocket connected ${socket.id}`);
-// });
+io.use(socketioMiddleware).on("connection", (socket) => {
+  socket.on(ClientEvents.BoardsJoin, ({ boardId }) => {
+    BoardController.joinBoard(io, socket, boardId);
+  });
+
+  socket.on(ClientEvents.BoardsLeave, ({ boardId }) => {
+    BoardController.leaveBoard(io, socket, boardId);
+  });
+});
 
 const bootstrap = async () => {
   await startDb();

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { UserPayload } from "../types/user.interface";
 import User from "../models/user.schema";
 import { ExpressRequest } from "../types/request.interface";
+import { normalizeUser } from "../controllers/user.controller";
 export default async (
   req: ExpressRequest,
   res: Response,
@@ -19,7 +20,7 @@ export default async (
     if (!user) {
       throw new Error("User not found");
     }
-    req.user = user;
+    req.user = normalizeUser(user);
     next();
   } catch (err: any) {
     return res.status(401).json({ message: err.message });

@@ -22,6 +22,7 @@ export class InlineFormComponent implements OnInit {
   @Input() hasButton = true;
   @Output() handleSubmit = new EventEmitter();
   @Input() alwaysEditting = false;
+  @Input() fullHeight = false;
   isEditting = false;
   controls: Record<string, FormControl> = {};
 

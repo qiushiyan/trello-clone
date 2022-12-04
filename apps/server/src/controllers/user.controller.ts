@@ -4,11 +4,9 @@ import { Error as MongooseError } from "mongoose";
 import { UserDocument } from "../types/user.interface";
 import jwt from "jsonwebtoken";
 import {
-  EmailExistsInput,
   EmailExistsRequest,
   ExpressRequest,
   LoginRequest,
-  RegisterInput,
   RegisterRequest,
 } from "../types/request.interface";
 
@@ -18,7 +16,7 @@ export const normalizeUser = (user: UserDocument) => {
     process.env.JWT_SECRET!
   );
   return {
-    id: user._id,
+    id: user._id.toString(),
     email: user.email,
     username: user.username,
     createdAt: user.createdAt,
@@ -29,7 +27,7 @@ export const normalizeUser = (user: UserDocument) => {
 
 export const currentUser = async (req: ExpressRequest, res: Response) => {
   if (req.user) {
-    return res.json(normalizeUser(req.user));
+    return res.json(req.user);
   } else {
     return res.status(401).json({ message: "login to see the current user" });
   }

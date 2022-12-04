@@ -1,3 +1,4 @@
+// extended by mongoose, hence no id
 export interface User {
   email: string;
   username: string;
@@ -6,4 +7,8 @@ export interface User {
   updatedAt: Date;
 }
 
-export type CurrentUser = User & { token: string };
+// normalized user
+export type CurrentUser = Omit<User, "password"> & {
+  id: string;
+  token: string;
+};

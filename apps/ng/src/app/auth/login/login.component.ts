@@ -11,6 +11,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SocketService } from 'src/app/services/socket.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -25,10 +26,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private socketService: SocketService
+  ) {}
 
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', [Validators.required]);
+  email = new FormControl('', {
+    validators: [Validators.required, Validators.email],
+    nonNullable: true,
+  });
+  password = new FormControl('', {
+    validators: [Validators.required, Validators.minLength(3)],
+    nonNullable: true,
+  });
   error: string | null = null;
 
   loginForm = new FormGroup({
@@ -38,11 +49,12 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService
-      .login({ email: this.email.value!, password: this.password.value! })
+      .login({ email: this.email.value, password: this.password.value })
       .subscribe({
         next: (user) => {
           this.authService.setCurrentUser(user);
           this.authService.setToken(user.token);
+          this.socketService.createConnection(user);
           this.error = null;
           this.router.navigateByUrl('/');
         },

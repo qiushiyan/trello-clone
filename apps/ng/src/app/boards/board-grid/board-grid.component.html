@@ -1,18 +1,19 @@
 <div class="boards-container max-w-6xl min-h-screen mx-auto">
-    <div class="flex justify-between">
+    <div class="flex justify-between mb-5">
         <h2 class="font-bold text-3xl mb-5">My boards</h2>
         <button class="btn btn-secondary" (click)="logout($event)">logout</button>
     </div>
-    <div class="w-full grid grid-cols-4 gap-4">
+    <div class="boards-grid w-full grid grid-cols-4 gap-4">
         <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
-            [hasButton]="false">
+            [hasButton]="false" [fullHeight]="true">
             <div class="card w-64 bg-info text-primary-content shadow-lg">
                 <div class="card-body">
                     <h2 class="card-title justify-center">Create new board</h2>
                 </div>
             </div>
         </app-inline-form>
-        <app-board-card *ngFor="let board of boards" [title]="board.title"></app-board-card>
+        <app-board-card *ngFor="let board of boards" [title]="board.title" [routerLink]="['/boards', board.id]">
+        </app-board-card>
     </div>
 
     <div class="dropdown dropdown-right dropdown-end">

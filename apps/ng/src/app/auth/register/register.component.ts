@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { EmailExistsValidator } from 'src/app/auth/validators/email';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-register',
@@ -30,6 +31,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private emailExistsValidator: EmailExistsValidator,
+    private sockerService: SocketService,
     private router: Router
   ) {}
   error: string | null = null;
@@ -60,6 +62,7 @@ export class RegisterComponent implements OnInit {
       next: (user) => {
         this.authService.setCurrentUser(user);
         this.authService.setToken(user.token);
+        this.sockerService.createConnection(user);
         this.error = null;
         this.router.navigateByUrl('/');
       },

@@ -1,4 +1,5 @@
-<div class="flex max-w-xs justify-center items-center mx-auto h-full" (click)="activeEditting()">
+<div class="flex max-w-xs justify-center items-center mx-auto" [ngClass]="{'h-full': fullHeight}"
+    (click)="activeEditting()">
     <ng-container *ngIf="!isEditting; else form">
         <ng-content></ng-content>
     </ng-container>

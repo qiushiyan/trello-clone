@@ -30,6 +30,7 @@ importers:
       karma-jasmine-html-reporter: ~2.0.0
       postcss: ^8.4.19
       rxjs: ~7.5.0
+      socket.io-client: ^4.5.4
       tailwindcss: ^3.2.4
       tslib: ^2.3.0
       typescript: ~4.8.4
@@ -43,15 +44,16 @@ importers:
       '@angular/platform-browser': 15.0.2_c53tiokkldbnrdbarlei26dgcq
       '@angular/platform-browser-dynamic': 15.0.2_35pdmxna5zlo6jyg6u37zetaoe
       '@angular/router': 15.0.2_ea22usrlx5m3srsxqo5of4y3om
+      '@trello-clone/types': link:../../packages/types
       daisyui: 2.42.1_2lwn2upnx27dqeg6hqdu7sq75m
       rxjs: 7.5.7
+      socket.io-client: 4.5.4
       tslib: 2.4.1
       zone.js: 0.11.8
     devDependencies:
       '@angular-devkit/build-angular': 15.0.2_qzd2iekhcj2omxw7lwdgmn3hey
       '@angular/cli': 15.0.2
       '@angular/compiler-cli': 15.0.2_nfmjq542a7cmaxn34ttkyemdb4
-      '@trello-clone/types': link:../../packages/types
       '@types/jasmine': 4.0.3
       autoprefixer: 10.4.13_postcss@8.4.19
       jasmine-core: 4.3.0
@@ -106,7 +108,10 @@ importers:
       tsx: 3.11.0
 
   packages/types:
-    specifiers: {}
+    specifiers:
+      socket.io: ^4.5.4
+    dependencies:
+      socket.io: 4.5.4
 
 packages:
 
@@ -3981,6 +3986,20 @@ packages:
     dev: true
     optional: true
 
+  /engine.io-client/6.2.3:
+    resolution: {integrity: sha512-aXPtgF1JS3RuuKcpSrBtimSjYvrbhKW9froICH4s0F3XQWLxsKNxqzG39nnvQZQnva4CMvUK63T7shevxRyYHw==}
+    dependencies:
+      '@socket.io/component-emitter': 3.1.0
+      debug: 4.3.4
+      engine.io-parser: 5.0.4
+      ws: 8.2.3
+      xmlhttprequest-ssl: 2.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   /engine.io-parser/5.0.4:
     resolution: {integrity: sha512-+nVFp+5z1E3HcToEnO7ZIj3g+3k9389DvWtvJZz0T6/eOCPIyyxehFcedoYrZQrp0LgQbD9pPXhpMBKMd5QURg==}
     engines: {node: '>=10.0.0'}
@@ -6869,6 +6888,20 @@ packages:
   /socket.io-adapter/2.4.0:
     resolution: {integrity: sha512-W4N+o69rkMEGVuk2D/cvca3uYsvGlMwsySWV447y99gUPghxq42BxqLNMndb+a1mm/5/7NeXVQS7RLa2XyXvYg==}
 
+  /socket.io-client/4.5.4:
+    resolution: {integrity: sha512-ZpKteoA06RzkD32IbqILZ+Cnst4xewU7ZYK12aS1mzHftFFjpoMz69IuhP/nL25pJfao/amoPI527KnuhFm01g==}
+    engines: {node: '>=10.0.0'}
+    dependencies:
+      '@socket.io/component-emitter': 3.1.0
+      debug: 4.3.4
+      engine.io-client: 6.2.3
+      socket.io-parser: 4.2.1
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+    dev: false
+
   /socket.io-parser/4.2.1:
     resolution: {integrity: sha512-V4GrkLy+HeF1F/en3SpUaM+7XxYXpuMUWLGde1kSSh5nQMN4hLrbPIkD+otwh6q9R6NOQBN4AMaOZ2zVjui82g==}
     engines: {node: '>=10.0.0'}
@@ -7693,6 +7726,11 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
+
+  /xmlhttprequest-ssl/2.0.0:
+    resolution: {integrity: sha512-QKxVRxiRACQcVuQEYFsI1hhkrMlrXHPegbbd1yn9UHOmRxY+si12nQYzri3vbzt8VdTTRviqcKxcyllFas5z2A==}
+    engines: {node: '>=0.4.0'}
+    dev: false
 
   /xtend/4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}

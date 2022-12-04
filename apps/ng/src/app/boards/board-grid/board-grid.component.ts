@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BoardsService } from 'src/app/services/boards.service';
 import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { Board, CreateBoardInput } from '@trello-clone/types';
@@ -17,6 +17,7 @@ import { BoardCardComponent } from '../board-card/board-card.component';
     BoardComponent,
     InlineFormComponent,
     BoardCardComponent,
+    RouterModule,
   ],
   templateUrl: './board-grid.component.html',
   styleUrls: ['./board-grid.component.scss'],

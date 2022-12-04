@@ -4,6 +4,7 @@ import { CurrentUser } from '@trello-clone/types';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { LoginInput, RegisterInput } from '@trello-clone/types';
+import { SocketService } from './socket.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,6 +14,8 @@ export class AuthService {
     filter((user) => user !== undefined), // wait for the first value
     map((user) => !!user)
   );
+
+  constructor(private http: HttpClient, private socketService: SocketService) {}
 
   getCurrentUser(): Observable<CurrentUser> {
     return this.http.get<CurrentUser>(environment.api.auth.currentUserUrl);
@@ -29,6 +32,7 @@ export class AuthService {
   logout() {
     this.setCurrentUser(null);
     localStorage.removeItem('token');
+    this.socketService.disconnect();
   }
 
   isEmailExists(email: string) {
@@ -47,6 +51,4 @@ export class AuthService {
   setCurrentUser(currentUser: CurrentUser | null) {
     this.currentUser$.next(currentUser);
   }
-
-  constructor(private http: HttpClient) {}
 }

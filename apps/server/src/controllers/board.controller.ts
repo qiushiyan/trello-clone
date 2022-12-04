@@ -7,10 +7,17 @@ import {
   GetBoardRequest,
 } from "../types/request.interface";
 import { Error as MongooseError } from "mongoose";
+import { Server, Socket } from "socket.io";
+import {
+  ClientToServerEvents,
+  ServerToClientEvents,
+  SocketIOSocket,
+  SocketIOServer,
+} from "@trello-clone/types";
 
 const normalizeBoard = (board: BoardDcoument) => {
   return {
-    id: board._id,
+    id: board._id.toString(),
     title: board.title,
     description: board.description,
     userId: board.userId,
@@ -26,7 +33,7 @@ export const list = async (
 ) => {
   if (req.user) {
     try {
-      const boards = (await Board.find({ userId: req.user._id })).map(
+      const boards = (await Board.find({ userId: req.user.id })).map(
         normalizeBoard
       );
       return res.json(boards);
@@ -48,7 +55,7 @@ export const get = async (
   if (req.user) {
     try {
       const board = await Board.findById(req.params.id);
-      if (board && board.userId.toString() === req.user._id.toString()) {
+      if (board) {
         return res.json(normalizeBoard(board));
       } else {
         return res.status(404).json({ message: "Board not found" });
@@ -76,11 +83,10 @@ export const create = async (
     try {
       const board = await Board.create({
         ...req.body,
-        userId: req.user._id,
+        userId: req.user.id,
       });
       return res.json(normalizeBoard(board));
     } catch (err: any) {
-      console.log(err);
       return res.status(401).json({
         message: "Internal error creating your board, try again later",
       });
@@ -88,4 +94,20 @@ export const create = async (
   } else {
     return res.status(401).json({ message: "Login to create a new board" });
   }
+};
+
+export const joinBoard = (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  boardId: string
+) => {
+  socket.join(boardId);
+};
+
+export const leaveBoard = (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  boardId: string
+) => {
+  socket.leave(boardId);
 };
