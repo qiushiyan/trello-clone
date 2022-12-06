@@ -8,12 +8,8 @@ import cors from "cors";
 import { authRouter } from "./routers/auth.router";
 import { boardRouter } from "./routers/board.router";
 import * as BoardController from "./controllers/board.controller";
-import {
-  ClientEvents,
-  ClientToServerEvents,
-  ServerToClientEvents,
-  SocketIOServer,
-} from "@trello-clone/types";
+import * as ColumnController from "./controllers/column.controller";
+import { ClientEvents, SocketIOServer } from "@trello-clone/types";
 import socketioMiddleware from "./middlewares/socketio.middleware";
 
 dotenv.config();
@@ -30,7 +26,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api/users", authRouter);
 app.use("/api/boards", boardRouter);
-
 app.get("/", (req, res) => {
   return res.send("hello world");
 });
@@ -42,6 +37,10 @@ io.use(socketioMiddleware).on("connection", (socket) => {
 
   socket.on(ClientEvents.BoardsLeave, ({ boardId }) => {
     BoardController.leaveBoard(io, socket, boardId);
+  });
+
+  socket.on(ClientEvents.ColumnsCreate, (data) => {
+    ColumnController.create(io, socket, data);
   });
 });
 

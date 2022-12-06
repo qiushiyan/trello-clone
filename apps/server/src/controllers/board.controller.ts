@@ -7,7 +7,6 @@ import {
   GetBoardRequest,
 } from "../types/request.interface";
 import { Error as MongooseError } from "mongoose";
-import { Server, Socket } from "socket.io";
 import {
   ClientToServerEvents,
   ServerToClientEvents,

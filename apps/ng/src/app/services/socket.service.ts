@@ -6,6 +6,7 @@ import {
   ClientEvents,
   BoardsJoinInput,
   BoardsLeaveInput,
+  ColumnCreateInput,
 } from '@trello-clone/types';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -36,5 +37,9 @@ export class SocketService {
 
   leaveBoard(input: BoardsLeaveInput) {
     this.socket?.emit(ClientEvents.BoardsLeave, input);
+  }
+
+  createColumn(input: ColumnCreateInput) {
+    this.socket?.emit(ClientEvents.ColumnsCreate, input);
   }
 }

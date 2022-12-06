@@ -9,10 +9,9 @@
         <app-alert *ngIf="error">{{ error }}</app-alert>
         <ng-container *ngIf="!error">
             <pre>
-                {{ (board$ | async) | json }}
+                {{ (data$ | async) | json }}
             </pre>
             <app-inline-form [fields]="createBoardFields">
-                <p>hello world</p>
             </app-inline-form>
         </ng-container>
     </div>

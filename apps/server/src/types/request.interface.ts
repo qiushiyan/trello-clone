@@ -20,3 +20,7 @@ export type CreateBoardRequest = Request<any, any, CreateBoardInput, any> & {
 export type GetBoardRequest = Request<{ id: string }, any, any, any> & {
   user?: CurrentUser;
 };
+
+export type GetColumnRequest = Request<{ id: string }, any, any, any> & {
+  user?: CurrentUser;
+};

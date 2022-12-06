@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardsService } from 'src/app/services/boards.service';
-import { Board, ClientEvents } from '@trello-clone/types';
+import { Board, ClientEvents, Column } from '@trello-clone/types';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -9,8 +9,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { InlineFormComponent } from 'src/app/components/inline-form/inline-form.component';
 import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { BoardService } from 'src/app/services/board.service';
-import { BehaviorSubject, filter, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
+import { ColumnsService } from 'src/app/services/columns.service';
 
 @Component({
   selector: 'app-board',
@@ -21,7 +22,10 @@ import { SocketService } from 'src/app/services/socket.service';
 })
 export class BoardComponent implements OnInit {
   boardId: string;
-  board$: Observable<Board>;
+  data$: Observable<{
+    board: Board | null;
+    columns: Column[];
+  }>;
 
   createBoardFields: InlineFormFields = [
     { name: 'title', defaultValue: 'qiuqiu', required: true, type: 'text' },
@@ -39,11 +43,15 @@ export class BoardComponent implements OnInit {
     private router: Router,
     private boardsService: BoardsService,
     private boardService: BoardService,
+    private columnService: ColumnsService,
     public authService: AuthService,
     private socketService: SocketService
   ) {
     this.boardId = this.route.snapshot.paramMap.get('boardId') as string;
-    this.board$ = this.boardService.board$.pipe(filter(Boolean));
+    this.data$ = combineLatest([
+      this.boardService.board$,
+      this.boardService.columns$,
+    ]).pipe(map(([board, columns]) => ({ board, columns })));
   }
 
   ngOnInit(): void {
@@ -70,5 +78,18 @@ export class BoardComponent implements OnInit {
         this.error = err.error.message;
       },
     });
+
+    this.columnService.getColumns(boardId).subscribe({
+      next: (columns) => {
+        this.boardService.setColumns(columns);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error.message;
+      },
+    });
+  }
+
+  createColumn(title: string) {
+    this.socketService.createColumn({ boardId: this.boardId, title });
   }
 }
