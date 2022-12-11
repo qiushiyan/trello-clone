@@ -10,6 +10,7 @@ import { BoardsModule } from './boards/boards.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NavbarComponent,
     HomeComponent,
     BrowserAnimationsModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {

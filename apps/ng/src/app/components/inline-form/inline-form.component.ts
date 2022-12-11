@@ -74,10 +74,12 @@ export class InlineFormComponent implements OnInit {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    this.handleSubmit.emit(this.form.value);
-    if (!this.alwaysEditting) {
-      this.isEditting = false;
+    if (this.form.valid) {
+      this.handleSubmit.emit(this.form.value);
+      if (!this.alwaysEditting) {
+        this.isEditting = false;
+      }
+      this.form.reset();
     }
-    this.form.reset();
   }
 }

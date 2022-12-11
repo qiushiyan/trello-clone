@@ -16,8 +16,8 @@
         [ngClass]="{'flex-col': !oneLine}">
         <div>
             <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
-                [type]="field['type']" [inline]="true" [placeholder]="field['placeholder']"
-                [marginBottom]="fields.length > 1"></app-input>
+                [required]="field['required']" [type]="field['type']" [inline]="true"
+                [placeholder]="field['placeholder']" [marginBottom]="fields.length > 1"></app-input>
         </div>
 
         <!-- actions, confirm on cancel -->

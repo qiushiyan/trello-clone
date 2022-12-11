@@ -7,14 +7,20 @@ import {
   GetBoardRequest,
 } from "../types/request.interface";
 import { Error as MongooseError } from "mongoose";
-import { SocketIOSocket, SocketIOServer } from "@trello-clone/types";
+import {
+  SocketIOSocket,
+  SocketIOServer,
+  ServerEvents,
+  UpdateBoardInput,
+} from "@trello-clone/types";
+import { getErrorMessage } from "../helpers";
 
 const normalizeBoard = (board: BoardDcoument) => {
   return {
     id: board._id.toString(),
     title: board.title,
     description: board.description,
-    userId: board.userId,
+    userId: board.userId.toString(),
     createdAt: board.createdAt,
     updatedAt: board.updatedAt,
   };
@@ -104,4 +110,29 @@ export const leaveBoard = (
   boardId: string
 ) => {
   socket.leave(boardId);
+};
+
+export const updateBoard = async (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  input: UpdateBoardInput
+) => {
+  try {
+    if (!socket.data.user) {
+      throw new Error("Log in to edit a board");
+    }
+
+    const updatedBoard = await Board.findByIdAndUpdate(input.id, input.fields, {
+      new: true,
+    });
+    if (!updatedBoard) {
+      throw new Error("Board not found");
+    }
+    io.to(input.id).emit(
+      ServerEvents.BoardsUpdateSuccess,
+      normalizeBoard(updatedBoard)
+    );
+  } catch (err: unknown) {
+    socket.emit(ServerEvents.BoardsUpdateFailure, getErrorMessage(err));
+  }
 };

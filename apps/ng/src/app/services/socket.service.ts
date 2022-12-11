@@ -9,6 +9,7 @@ import {
   BoardsLeaveInput,
   CreateColumnInput,
   CreateTaskInput,
+  UpdateBoardInput,
 } from '@trello-clone/types';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -52,6 +53,10 @@ export class SocketService {
 
   leaveBoard(input: BoardsLeaveInput) {
     this.socket?.emit(ClientEvents.BoardsLeave, input);
+  }
+
+  updateBoard(input: UpdateBoardInput) {
+    this.socket?.emit(ClientEvents.BoardsUpdate, input);
   }
 
   createColumn(input: CreateColumnInput) {

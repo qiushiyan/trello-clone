@@ -1,7 +1,21 @@
 <div class="board-container lg:grid lg:grid-cols-12 w-full p-5 min-h-screen">
     <!-- sidebar -->
     <div class="hidden lg:block lg:visible lg:col-span-2 lg:bordered lg:border-r-4">
-        <h3 class="font-bold text-2xl text-primary">{{ (authService.currentUser$ | async)?.username }}</h3>
+        <h3 class="font-bold text-3xl mb-5" *ngIf="authService.currentUser$ | async as user">{{
+            user.username }}
+        </h3>
+        <div *ngIf="data$ | async as data">
+            <app-inline-oneline-form [field]="updateBoardTitleField" (handleSubmit)="updateBoardTitle($event)">
+                <h3 class="text-2xl text-secondary mb-3 cursor-pointer hover:text-accent hover:scale-105 transition">{{
+                    data.board?.title}}</h3>
+            </app-inline-oneline-form>
+            <div *ngIf="data.board?.description">
+                <app-inline-oneline-form [field]="updateBoardDescriptionField"
+                    (handleSubmit)="updateBoardDescription($event)">
+                    <markdown class="break-words cursor-pointer">{{ data.board?.description }}</markdown>
+                </app-inline-oneline-form>
+            </div>
+        </div>
     </div>
 
 

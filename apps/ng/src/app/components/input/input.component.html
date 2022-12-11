@@ -1,7 +1,14 @@
 <div [ngClass]="{'mb-3': marginBottom}">
     <label class="label text-lg" *ngIf="!inline">{{ name }}</label>
-    <input [type]="type" [formControl]="field" [placeholder]="placeholder ? placeholder : ''" [class]="inputClass"
-        [attr.aria-label]="ariaLabel" />
+    <ng-container *ngIf="type === 'text'">
+        <input [type]="type" [formControl]="field" [placeholder]="placeholder ? placeholder : ''" [class]="inputClass"
+            [attr.aria-label]="ariaLabel" />
+    </ng-container>
+    <ng-container *ngIf="type === 'textarea'">
+        <textarea class="h-40" [formControl]="field" [placeholder]="placeholder ? placeholder : ''" [class]="inputClass"
+            [attr.aria-label]="ariaLabel" rows="10"></textarea>
+    </ng-container>
+
     <ng-container *ngIf="isChanged()">
         <app-alert *ngIf="isRequired()">
             {{ isRequiredError() }}

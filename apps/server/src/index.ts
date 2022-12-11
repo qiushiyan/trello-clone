@@ -47,6 +47,10 @@ io.use(socketioMiddleware).on("connection", (socket) => {
   socket.on(ClientEvents.TasksCreate, (data) => {
     TaskController.create(io, socket, data);
   });
+
+  socket.on(ClientEvents.BoardsUpdate, (data) => {
+    BoardController.updateBoard(io, socket, data);
+  });
 });
 
 const bootstrap = async () => {

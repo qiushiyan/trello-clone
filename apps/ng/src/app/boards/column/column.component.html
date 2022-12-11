@@ -1,4 +1,4 @@
-<div class="min-h-screen col-span-1 bordered rounded-lg px-2 py-4 m-2 bg-slate-600">
+<div class="col-span-1 bordered rounded-lg px-2 py-4 m-2 bg-slate-600">
     <h4 class="font-bold text-accent mb-5 text-center">{{ column.title }}</h4>
     <div class="flex flex-col gap-4">
         <app-task *ngFor="let task of tasks" [task]="task"></app-task>
