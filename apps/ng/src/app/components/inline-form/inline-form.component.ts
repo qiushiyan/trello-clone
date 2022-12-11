@@ -23,6 +23,7 @@ export class InlineFormComponent implements OnInit {
   @Input() oneLine = false;
   @Input() alwaysEditting = false;
   @Input() fullHeight = false;
+  @Input() fullWidth = false;
   @Input() text = '';
   @Output() handleSubmit = new EventEmitter();
   isEditting = false;

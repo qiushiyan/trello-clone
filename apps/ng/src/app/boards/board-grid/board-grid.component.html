@@ -1,7 +1,7 @@
 <div class="boards-container max-w-6xl min-h-screen mx-auto">
     <div class="flex justify-between mb-5">
         <h2 class="font-bold text-3xl mb-5">My boards</h2>
-        <button class="btn btn-secondary" (click)="logout($event)">logout</button>
+        <button class="btn btn-info" (click)="logout($event)">logout</button>
     </div>
     <div class="boards-grid w-full grid grid-cols-4 gap-4">
         <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
