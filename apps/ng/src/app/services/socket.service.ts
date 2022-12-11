@@ -7,7 +7,8 @@ import {
   ClientEvents,
   BoardsJoinInput,
   BoardsLeaveInput,
-  ColumnCreateInput,
+  CreateColumnInput,
+  CreateTaskInput,
 } from '@trello-clone/types';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -53,7 +54,11 @@ export class SocketService {
     this.socket?.emit(ClientEvents.BoardsLeave, input);
   }
 
-  createColumn(input: ColumnCreateInput) {
+  createColumn(input: CreateColumnInput) {
     this.socket?.emit(ClientEvents.ColumnsCreate, input);
+  }
+
+  createTask(input: CreateTaskInput) {
+    this.socket?.emit(ClientEvents.TasksCreate, input);
   }
 }

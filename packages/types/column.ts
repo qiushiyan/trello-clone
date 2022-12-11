@@ -7,3 +7,13 @@ export interface Column {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface CreateColumnInput {
+  boardId: string;
+  title: string;
+}
+
+// only
+export interface GetColumnInput {
+  boardId: string;
+}

@@ -5,3 +5,4 @@ export * from "./board";
 export * from "./theme";
 export * from "./socketio";
 export * from "./column";
+export * from "./task";

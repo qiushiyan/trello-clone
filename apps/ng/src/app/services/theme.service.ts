@@ -7,8 +7,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ThemeService {
   themes = ['cupcake', 'dracula'];
-  currentTheme$ = new BehaviorSubject<any>(
-    localStorage.getItem('theme') || 'cupcake'
+  currentTheme$ = new BehaviorSubject<AppTheme>(
+    (localStorage.getItem('theme') || 'cupcake') as AppTheme
   );
 
   constructor() {

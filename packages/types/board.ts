@@ -11,3 +11,7 @@ export interface Board {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface GetBoardInput {
+  id: string;
+}

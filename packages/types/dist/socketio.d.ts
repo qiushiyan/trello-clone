@@ -1,11 +1,24 @@
 import { Server, Socket } from "socket.io";
+import { Column, CreateColumnInput } from "./column";
+import { CreateTaskInput, Task } from "./task";
+import { CurrentUser } from "./user";
 export declare const enum ClientEvents {
     BoardsJoin = "boards:join",
-    BoardsLeave = "boards:leave"
+    BoardsLeave = "boards:leave",
+    ColumnsCreate = "columns:create",
+    TasksCreate = "tasks:create"
 }
 export declare const enum ServerEvents {
+    ColumnCreateSuccess = "columns:createSuccess",
+    ColumnCreateFailure = "columns:createFailure",
+    TasksCreateSuccess = "tasks:createSuccess",
+    TasksCreateFailure = "tasks:createFailure"
 }
 export interface ServerToClientEvents extends Record<ServerEvents, Function> {
+    [ServerEvents.ColumnCreateSuccess]: (column: Column) => void;
+    [ServerEvents.ColumnCreateFailure]: (msg: string) => void;
+    [ServerEvents.TasksCreateSuccess]: (task: Task) => void;
+    [ServerEvents.TasksCreateFailure]: (msg: string) => void;
 }
 export interface BoardsJoinInput {
     boardId: string;
@@ -14,8 +27,14 @@ export interface BoardsLeaveInput {
     boardId: string;
 }
 export interface ClientToServerEvents extends Record<ClientEvents, Function> {
-    "boards:join": (input: BoardsJoinInput) => void;
-    "boards:leave": (input: BoardsLeaveInput) => void;
+    [ClientEvents.BoardsJoin]: (input: BoardsJoinInput) => void;
+    [ClientEvents.BoardsLeave]: (input: BoardsLeaveInput) => void;
+    [ClientEvents.ColumnsCreate]: (input: CreateColumnInput) => void;
+    [ClientEvents.TasksCreate]: (input: CreateTaskInput) => void;
 }
-export declare type SocketIOServer = Server<ClientToServerEvents, ServerToClientEvents, any, any>;
-export declare type SocketIOSocket = Socket<ClientToServerEvents, ServerToClientEvents, any, any>;
+interface SocketData {
+    user?: CurrentUser;
+}
+export declare type SocketIOServer = Server<ClientToServerEvents, ServerToClientEvents, never, SocketData>;
+export declare type SocketIOSocket = Socket<ClientToServerEvents, ServerToClientEvents, never, SocketData>;
+export {};

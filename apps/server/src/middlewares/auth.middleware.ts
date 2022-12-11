@@ -4,6 +4,7 @@ import { UserPayload } from "../types/user.interface";
 import User from "../models/user.schema";
 import { ExpressRequest } from "../types/request.interface";
 import { normalizeUser } from "../controllers/user.controller";
+import { getErrorMessage } from "../helpers";
 export default async (
   req: ExpressRequest,
   res: Response,
@@ -22,7 +23,7 @@ export default async (
     }
     req.user = normalizeUser(user);
     next();
-  } catch (err: any) {
-    return res.status(401).json({ message: err.message });
+  } catch (err: unknown) {
+    return res.status(401).json({ message: getErrorMessage(err) });
   }
 };

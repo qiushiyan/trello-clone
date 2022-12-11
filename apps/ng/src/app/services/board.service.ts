@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Board, Column } from '@trello-clone/types';
+import { Board, Column, Task } from '@trello-clone/types';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class BoardService {
   board$ = new BehaviorSubject<Board | null>(null);
   columns$ = new BehaviorSubject<Column[]>([]);
+  tasks$ = new BehaviorSubject<Task[]>([]);
 
   constructor() {}
 
@@ -21,5 +22,13 @@ export class BoardService {
 
   addColumn(column: Column) {
     this.columns$.next([...this.columns$.value, column]);
+  }
+
+  setTasks(tasks: Task[]) {
+    this.tasks$.next(tasks);
+  }
+
+  addTask(task: Task) {
+    this.tasks$.next([...this.tasks$.value, task]);
   }
 }

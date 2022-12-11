@@ -1,5 +1,5 @@
 import {
-  ColumnCreateInput,
+  CreateColumnInput,
   Column,
   ServerEvents,
   SocketIOServer,
@@ -11,7 +11,7 @@ import ColumnModel from "../models/column.schema";
 import { ColumnDocument } from "../types/column.interface";
 import { GetColumnRequest } from "../types/request.interface";
 
-export const normalizeColumn = (column: ColumnDocument & {}): Column => {
+export const normalizeColumn = (column: ColumnDocument): Column => {
   return {
     id: column._id.toString(),
     title: column.title,
@@ -29,11 +29,11 @@ export const list = async (
 ) => {
   if (req.user) {
     try {
-      const columns = await ColumnModel.find({ boardId: req.params.id });
+      const columns = await ColumnModel.find({ boardId: req.params.boardId });
       return res.json(columns.map(normalizeColumn));
     } catch (err: unknown) {
       return res.status(401).json({
-        message: `Internal error fetching columns for baord ${req.params.id}, try again later`,
+        message: `Internal error fetching columns for baord ${req.params.boardId}, try again later`,
       });
     }
   } else {
@@ -44,7 +44,7 @@ export const list = async (
 export const create = async (
   io: SocketIOServer,
   socket: SocketIOSocket,
-  { boardId, title }: ColumnCreateInput
+  { boardId, title }: CreateColumnInput
 ) => {
   try {
     if (socket.data.user) {

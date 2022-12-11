@@ -1,7 +1,7 @@
 import { Schema, Document } from "mongoose";
 
 // Column type for mongoose
-// there is also a (normalized )Column type for network requests in the types package
+// there is also a (normalized ) Column type for network requests in the types package
 export interface Column {
   title: string;
   createdAt: string;

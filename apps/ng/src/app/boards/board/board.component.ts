@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { BoardsService } from 'src/app/services/boards.service';
 import {
   Board,
-  ClientEvents,
   Column,
-  ColumnCreateInput,
+  CreateColumnInput,
   ServerEvents,
+  Task,
 } from '@trello-clone/types';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
@@ -15,10 +15,23 @@ import { AuthService } from 'src/app/services/auth.service';
 import { InlineFormComponent } from 'src/app/components/inline-form/inline-form.component';
 import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { BoardService } from 'src/app/services/board.service';
-import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  from,
+  groupBy,
+  map,
+  mergeMap,
+  Observable,
+  reduce,
+  tap,
+  toArray,
+} from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
 import { ColumnsService } from 'src/app/services/columns.service';
 import { ColumnComponent } from '../column/column.component';
+import { TasksService } from 'src/app/services/tasks.service';
 
 @Component({
   selector: 'app-board',
@@ -32,6 +45,7 @@ export class BoardComponent implements OnInit {
   data$: Observable<{
     board: Board | null;
     columns: Column[];
+    tasks: Task[];
   }>;
 
   createBoardFields: InlineFormFields = [
@@ -44,7 +58,8 @@ export class BoardComponent implements OnInit {
     private router: Router,
     private boardsService: BoardsService,
     private boardService: BoardService,
-    private columnService: ColumnsService,
+    private columnsService: ColumnsService,
+    private taskServioce: TasksService,
     public authService: AuthService,
     private socketService: SocketService
   ) {
@@ -52,7 +67,12 @@ export class BoardComponent implements OnInit {
     this.data$ = combineLatest([
       this.boardService.board$,
       this.boardService.columns$,
-    ]).pipe(map(([board, columns]) => ({ board, columns })));
+      this.boardService.tasks$,
+    ]).pipe(
+      map(([board, columns, tasks]) => {
+        return { board, columns, tasks };
+      })
+    );
   }
 
   ngOnInit(): void {
@@ -66,6 +86,12 @@ export class BoardComponent implements OnInit {
           this.error = err.message;
         },
       });
+    this.socketService.listen<Task>(ServerEvents.TasksCreateSuccess).subscribe({
+      next: (task) => this.boardService.addTask(task),
+      error: (err: HttpErrorResponse) => {
+        this.error = err.message;
+      },
+    });
     this.initializeLeaveBoardListener();
   }
 
@@ -74,6 +100,8 @@ export class BoardComponent implements OnInit {
       if (event instanceof NavigationStart) {
         this.socketService.leaveBoard({ boardId: this.boardId });
         this.boardService.setBoard(null);
+        this.boardService.setColumns([]);
+        this.boardService.setTasks([]);
       }
     });
   }
@@ -88,9 +116,18 @@ export class BoardComponent implements OnInit {
       },
     });
 
-    this.columnService.getColumns(boardId).subscribe({
+    this.columnsService.getColumns(boardId).subscribe({
       next: (columns) => {
         this.boardService.setColumns(columns);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = err.error.message;
+      },
+    });
+
+    this.taskServioce.getTasks(boardId).subscribe({
+      next: (tasks) => {
+        this.boardService.setTasks(tasks);
       },
       error: (err: HttpErrorResponse) => {
         this.error = err.error.message;
@@ -100,5 +137,13 @@ export class BoardComponent implements OnInit {
 
   createColumn({ title }: { title: string }) {
     this.socketService.createColumn({ boardId: this.boardId, title });
+  }
+
+  createTask({ title, columnId }: { title: string; columnId: string }) {
+    this.socketService.createTask({ boardId: this.boardId, title, columnId });
+  }
+
+  getTasksByColumnId(tasks: Task[], columnId: string): Task[] {
+    return tasks.filter((task) => task.columnId === columnId);
   }
 }

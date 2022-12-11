@@ -9,6 +9,7 @@ import { authRouter } from "./routers/auth.router";
 import { boardRouter } from "./routers/board.router";
 import * as BoardController from "./controllers/board.controller";
 import * as ColumnController from "./controllers/column.controller";
+import * as TaskController from "./controllers/task.controller";
 import { ClientEvents, SocketIOServer } from "@trello-clone/types";
 import socketioMiddleware from "./middlewares/socketio.middleware";
 
@@ -41,6 +42,10 @@ io.use(socketioMiddleware).on("connection", (socket) => {
 
   socket.on(ClientEvents.ColumnsCreate, (data) => {
     ColumnController.create(io, socket, data);
+  });
+
+  socket.on(ClientEvents.TasksCreate, (data) => {
+    TaskController.create(io, socket, data);
   });
 });
 
