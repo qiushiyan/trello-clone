@@ -44,13 +44,13 @@ interface SocketData {
 export type SocketIOServer = Server<
   ClientToServerEvents,
   ServerToClientEvents,
-  any,
+  never,
   SocketData
 >;
 
 export type SocketIOSocket = Socket<
   ClientToServerEvents,
   ServerToClientEvents,
-  any,
+  never,
   SocketData
 >;

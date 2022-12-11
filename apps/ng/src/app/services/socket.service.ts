@@ -3,11 +3,13 @@ import {
   ClientToServerEvents,
   CurrentUser,
   ServerToClientEvents,
+  ServerEvents,
   ClientEvents,
   BoardsJoinInput,
   BoardsLeaveInput,
   ColumnCreateInput,
 } from '@trello-clone/types';
+import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -25,6 +27,18 @@ export class SocketService {
         token: currentUser.token,
       },
     });
+  }
+
+  listen<T>(event: ServerEvents) {
+    if (this.socket) {
+      return new Observable<T>((subscriber) => {
+        this.socket!.on(event, (data: unknown) => {
+          subscriber.next(data as T);
+        });
+      });
+    } else {
+      throw new Error('Socket is not connected');
+    }
   }
 
   disconnect() {

@@ -1,7 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardsService } from 'src/app/services/boards.service';
-import { Board, ClientEvents, Column } from '@trello-clone/types';
+import {
+  Board,
+  ClientEvents,
+  Column,
+  ColumnCreateInput,
+  ServerEvents,
+} from '@trello-clone/types';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -12,11 +18,12 @@ import { BoardService } from 'src/app/services/board.service';
 import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
 import { ColumnsService } from 'src/app/services/columns.service';
+import { ColumnComponent } from '../column/column.component';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule, AlertComponent, InlineFormComponent],
+  imports: [CommonModule, AlertComponent, InlineFormComponent, ColumnComponent],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
@@ -28,13 +35,7 @@ export class BoardComponent implements OnInit {
   }>;
 
   createBoardFields: InlineFormFields = [
-    { name: 'title', defaultValue: 'qiuqiu', required: true, type: 'text' },
-    {
-      name: 'description',
-      defaultValue: 'qiuqiu description',
-      required: false,
-      type: 'textarea',
-    },
+    { name: 'title', defaultValue: 'Important', required: true, type: 'text' },
   ];
   error: string | null = null;
 
@@ -57,6 +58,14 @@ export class BoardComponent implements OnInit {
   ngOnInit(): void {
     this.fetchBoard(this.boardId);
     this.socketService.joinBoard({ boardId: this.boardId });
+    this.socketService
+      .listen<Column>(ServerEvents.ColumnCreateSuccess)
+      .subscribe({
+        next: (column) => this.boardService.addColumn(column),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
     this.initializeLeaveBoardListener();
   }
 
@@ -89,7 +98,7 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  createColumn(title: string) {
+  createColumn({ title }: { title: string }) {
     this.socketService.createColumn({ boardId: this.boardId, title });
   }
 }

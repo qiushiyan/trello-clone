@@ -18,4 +18,8 @@ export class BoardService {
   setColumns(columns: Column[]) {
     this.columns$.next(columns);
   }
+
+  addColumn(column: Column) {
+    this.columns$.next([...this.columns$.value, column]);
+  }
 }

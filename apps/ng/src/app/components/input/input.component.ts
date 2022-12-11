@@ -20,6 +20,7 @@ export class InputComponent implements OnInit {
   @Input() inline = false; // styles for inline form
   @Input() ariaLabel: string = '';
   @Input() extClass: string = '';
+  @Input() marginBottom = true;
 
   inputClass: string = '';
 

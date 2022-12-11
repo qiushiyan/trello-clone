@@ -1,17 +1,32 @@
-<div class="flex max-w-xs justify-center items-center mx-auto" [ngClass]="{'h-full': fullHeight}"
-    (click)="activeEditting()">
+<div [class]="wrapperClass" [ngClass]="{'h-full': fullHeight}" (click)="activeEditting()">
     <ng-container *ngIf="!isEditting; else form">
-        <ng-content></ng-content>
+        <div class="py-2 px-4 bg-base-300 rounded-lg cursor-pointer hover:bg-accent hover:scale-105 duration-300">
+            <div class="flex items-center">
+                <span class="material-symbols-outlined">
+                    add
+                </span>
+                {{ text }}
+            </div>
+        </div>
     </ng-container>
 </div>
 
 <ng-template #form>
-    <form class="flex flex-col gap-1 items-center " (submit)="onSubmit($event)">
-        <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
-            [type]="field['type']" [inline]="true" [placeholder]="field['placeholder']"></app-input>
-        <div class="flex items-center" *ngIf="hasButton">
-            <button class=" btn btn-primary text-sm sblock mr-2 normal-case" *ngIf="hasButton">Save</button>
-            <button class="btn btn-ghost text-sm normal-case" (click)="cancel($event)">Cancel</button>
+    <form class="flex gap-2 items-center bg-base-200 p-2 rounded-lg" (submit)="onSubmit($event)"
+        [ngClass]="{'flex-col': !oneLine}">
+        <div>
+            <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
+                [type]="field['type']" [inline]="true" [placeholder]="field['placeholder']"
+                [marginBottom]="fields.length > 1"></app-input>
+        </div>
+
+        <!-- actions, confirm on cancel -->
+        <div class="flex items-center justify-start" *ngIf="hasButton" [ngClass]="{'w-full': oneLine}">
+            <button class=" btn btn-accent text-sm sblock mr-2 normal-case p-3" *ngIf="hasButton"
+                (submit)="onSubmit($event)">Save</button>
+            <span class="material-symbols-outlined cursor-pointer" (click)="cancel($event)">
+                close
+            </span>
         </div>
     </form>
 </ng-template>

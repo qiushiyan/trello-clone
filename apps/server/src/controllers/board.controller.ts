@@ -7,12 +7,7 @@ import {
   GetBoardRequest,
 } from "../types/request.interface";
 import { Error as MongooseError } from "mongoose";
-import {
-  ClientToServerEvents,
-  ServerToClientEvents,
-  SocketIOSocket,
-  SocketIOServer,
-} from "@trello-clone/types";
+import { SocketIOSocket, SocketIOServer } from "@trello-clone/types";
 
 const normalizeBoard = (board: BoardDcoument) => {
   return {
@@ -59,7 +54,7 @@ export const get = async (
       } else {
         return res.status(404).json({ message: "Board not found" });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (err instanceof MongooseError.CastError) {
         return res.status(404).json({ message: "Board not found" });
       } else {
@@ -85,7 +80,7 @@ export const create = async (
         userId: req.user.id,
       });
       return res.json(normalizeBoard(board));
-    } catch (err: any) {
+    } catch (err: unknown) {
       return res.status(401).json({
         message: "Internal error creating your board, try again later",
       });

@@ -7,12 +7,18 @@
     <!-- board -->
     <div class="w-full lg:col-span-10">
         <app-alert *ngIf="error">{{ error }}</app-alert>
-        <ng-container *ngIf="!error">
-            <pre>
-                {{ (data$ | async) | json }}
-            </pre>
-            <app-inline-form [fields]="createBoardFields">
-            </app-inline-form>
+
+        <ng-container *ngIf="data$ | async as data">
+            <div class="grid grid-cols-6">
+                <div *ngFor="let column of data.columns">
+                    <app-column [column]="column" [column]="column"></app-column>
+                </div>
+                <div class="col-span-1  bordered rounded-lg m-2">
+                    <app-inline-form [fields]="createBoardFields" text="column" [oneLine]="true"
+                        (handleSubmit)="createColumn($event)" [hasButton]="false">
+                    </app-inline-form>
+                </div>
+            </div>
         </ng-container>
     </div>
 </div>

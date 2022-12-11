@@ -6,5 +6,6 @@ import { BoardsService } from '../services/boards.service';
 @NgModule({
   imports: [CommonModule, BoardsRoutingModule],
   providers: [BoardsService],
+  declarations: [],
 })
 export class BoardsModule {}

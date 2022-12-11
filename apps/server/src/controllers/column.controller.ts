@@ -31,7 +31,7 @@ export const list = async (
     try {
       const columns = await ColumnModel.find({ boardId: req.params.id });
       return res.json(columns.map(normalizeColumn));
-    } catch (err: any) {
+    } catch (err: unknown) {
       return res.status(401).json({
         message: `Internal error fetching columns for baord ${req.params.id}, try again later`,
       });
@@ -53,9 +53,10 @@ export const create = async (
         userId: socket.data.user.id,
         boardId,
       });
-      socket
-        .to(boardId)
-        .emit(ServerEvents.ColumnCreateSuccess, normalizeColumn(column));
+      io.to(boardId).emit(
+        ServerEvents.ColumnCreateSuccess,
+        normalizeColumn(column)
+      );
     } else {
       socket.emit(ServerEvents.ColumnCreateFailure, "Login to create a column");
     }

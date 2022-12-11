@@ -5,12 +5,7 @@
     </div>
     <div class="boards-grid w-full grid grid-cols-4 gap-4">
         <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
-            [hasButton]="false" [fullHeight]="true">
-            <div class="card w-64 bg-info text-primary-content shadow-lg">
-                <div class="card-body">
-                    <h2 class="card-title justify-center">Create new board</h2>
-                </div>
-            </div>
+            [hasButton]="false" [fullHeight]="true" text="Create new board">
         </app-inline-form>
         <app-board-card *ngFor="let board of boards" [title]="board.title" [routerLink]="['/boards', board.id]">
         </app-board-card>

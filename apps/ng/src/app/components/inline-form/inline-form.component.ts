@@ -20,10 +20,14 @@ import { InputComponent } from '../input/input.component';
 export class InlineFormComponent implements OnInit {
   @Input() fields!: InlineFormFields;
   @Input() hasButton = true;
-  @Output() handleSubmit = new EventEmitter();
+  @Input() oneLine = false;
   @Input() alwaysEditting = false;
   @Input() fullHeight = false;
+  @Input() text = '';
+  @Output() handleSubmit = new EventEmitter();
   isEditting = false;
+  wrapperClass = '';
+
   controls: Record<string, FormControl> = {};
 
   form = new FormGroup({});
@@ -31,6 +35,9 @@ export class InlineFormComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.wrapperClass = this.oneLine
+      ? 'flex'
+      : 'flex max-w-xs justify-center items-center mx-auto';
     if (this.alwaysEditting) {
       this.isEditting = true;
     }
@@ -60,17 +67,13 @@ export class InlineFormComponent implements OnInit {
 
   cancel(event: Event) {
     event.preventDefault();
-    if (!this.alwaysEditting) {
-      this.isEditting = false;
-    }
+    this.isEditting = false;
     this.form.reset();
   }
 
   onSubmit(event: Event) {
     event.preventDefault();
-    if (this.form.dirty) {
-      this.handleSubmit.emit(this.form.value);
-    }
+    this.handleSubmit.emit(this.form.value);
     if (!this.alwaysEditting) {
       this.isEditting = false;
     }
