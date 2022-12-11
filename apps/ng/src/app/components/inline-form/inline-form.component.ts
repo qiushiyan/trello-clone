@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { BoardService } from 'src/app/services/board.service';
 import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { InputComponent } from '../input/input.component';
 
@@ -25,6 +26,7 @@ export class InlineFormComponent implements OnInit {
   @Input() fullHeight = false;
   @Input() fullWidth = false;
   @Input() text = '';
+  @Input() type = 'board';
   @Output() handleSubmit = new EventEmitter();
   isEditting = false;
   wrapperClass = '';
@@ -33,12 +35,17 @@ export class InlineFormComponent implements OnInit {
 
   form = new FormGroup({});
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private boardService: BoardService) {}
 
   ngOnInit(): void {
-    this.wrapperClass = this.oneLine
-      ? 'flex'
-      : 'flex max-w-xs justify-center items-center mx-auto';
+    if (this.fullWidth) {
+      this.wrapperClass = '';
+    } else {
+      this.wrapperClass = this.oneLine
+        ? 'flex'
+        : 'flex justify-center items-center mx-auto';
+    }
+
     if (this.alwaysEditting) {
       this.isEditting = true;
     }
@@ -58,6 +65,21 @@ export class InlineFormComponent implements OnInit {
       this.controls[field['name']] = control;
       this.form.addControl(field['name'], control);
     });
+
+    switch (this.type) {
+      case 'board':
+        this.boardService.board$.subscribe((board) => {
+          if (board) {
+            this.fields.forEach((field) => {
+              const fieldName = field.name as keyof typeof board;
+              this.controls[field.name].patchValue(board[fieldName]);
+            });
+          }
+        });
+        break;
+      default:
+        break;
+    }
   }
 
   activeEditting() {
@@ -69,16 +91,13 @@ export class InlineFormComponent implements OnInit {
   cancel(event: Event) {
     event.preventDefault();
     this.isEditting = false;
-    this.form.reset();
   }
 
   onSubmit(event: Event) {
     event.preventDefault();
     if (this.form.valid) {
       this.handleSubmit.emit(this.form.value);
-      if (!this.alwaysEditting) {
-        this.isEditting = false;
-      }
+      this.isEditting = false;
       this.form.reset();
     }
   }

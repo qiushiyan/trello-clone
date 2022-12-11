@@ -51,6 +51,10 @@ io.use(socketioMiddleware).on("connection", (socket) => {
   socket.on(ClientEvents.BoardsUpdate, (data) => {
     BoardController.updateBoard(io, socket, data);
   });
+
+  socket.on(ClientEvents.BoardsDelete, (data) => {
+    BoardController.deleteBoard(io, socket, data);
+  });
 });
 
 const bootstrap = async () => {

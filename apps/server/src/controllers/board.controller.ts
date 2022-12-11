@@ -12,6 +12,7 @@ import {
   SocketIOServer,
   ServerEvents,
   UpdateBoardInput,
+  DeleteBoardInput,
 } from "@trello-clone/types";
 import { getErrorMessage } from "../helpers";
 
@@ -134,5 +135,22 @@ export const updateBoard = async (
     );
   } catch (err: unknown) {
     socket.emit(ServerEvents.BoardsUpdateFailure, getErrorMessage(err));
+  }
+};
+
+export const deleteBoard = async (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  input: DeleteBoardInput
+) => {
+  try {
+    if (!socket.data.user) {
+      throw new Error("Log in to edit a board");
+    }
+
+    await Board.findOneAndDelete({ _id: input.id });
+    io.to(input.id).emit(ServerEvents.BoardsDeleteSuccess);
+  } catch (err: unknown) {
+    socket.emit(ServerEvents.BoardsDeleteFailure, getErrorMessage(err));
   }
 };

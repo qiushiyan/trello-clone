@@ -13,3 +13,13 @@ export interface Board {
 export interface GetBoardInput {
     id: string;
 }
+export interface DeleteBoardInput {
+    id: string;
+}
+export interface UpdateBoardInput {
+    id: string;
+    fields: {
+        title?: string;
+        description?: string;
+    };
+}

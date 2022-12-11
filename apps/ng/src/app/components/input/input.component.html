@@ -5,8 +5,8 @@
             [attr.aria-label]="ariaLabel" />
     </ng-container>
     <ng-container *ngIf="type === 'textarea'">
-        <textarea class="h-40" [formControl]="field" [placeholder]="placeholder ? placeholder : ''" [class]="inputClass"
-            [attr.aria-label]="ariaLabel" rows="10"></textarea>
+        <textarea class="h-40 p-2" [formControl]="field" [placeholder]="placeholder ? placeholder : ''"
+            [class]="inputClass" [attr.aria-label]="ariaLabel" rows="10"></textarea>
     </ng-container>
 
     <ng-container *ngIf="isChanged()">

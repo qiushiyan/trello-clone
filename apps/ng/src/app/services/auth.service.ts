@@ -21,6 +21,10 @@ export class AuthService {
     return this.http.get<CurrentUser>(environment.api.auth.currentUserUrl);
   }
 
+  setCurrentUser(currentUser: CurrentUser | null) {
+    this.currentUser$.next(currentUser);
+  }
+
   register(req: RegisterInput): Observable<CurrentUser> {
     return this.http.post<CurrentUser>(environment.api.auth.registerUrl, req);
   }
@@ -46,9 +50,5 @@ export class AuthService {
 
   setToken(token: string) {
     localStorage.setItem('token', token);
-  }
-
-  setCurrentUser(currentUser: CurrentUser | null) {
-    this.currentUser$.next(currentUser);
   }
 }

@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { Board, UpdateBoardInput } from "./board";
+import { Board, DeleteBoardInput, UpdateBoardInput } from "./board";
 import { Column, CreateColumnInput } from "./column";
 import { CreateTaskInput, Task } from "./task";
 import { CurrentUser } from "./user";
@@ -8,6 +8,7 @@ export const enum ClientEvents {
   BoardsJoin = "boards:join",
   BoardsLeave = "boards:leave",
   BoardsUpdate = "boards:update",
+  BoardsDelete = "boards:delete",
   ColumnsCreate = "columns:create",
   TasksCreate = "tasks:create",
 }
@@ -19,6 +20,8 @@ export const enum ServerEvents {
   TasksCreateFailure = "tasks:createFailure",
   BoardsUpdateSuccess = "boards:updateSuccess",
   BoardsUpdateFailure = "boards:updateFailure",
+  BoardsDeleteSuccess = "boards:deleteSuccess",
+  BoardsDeleteFailure = "boards:deleteFailure",
 }
 
 export interface ServerToClientEvents extends Record<ServerEvents, Function> {
@@ -28,6 +31,8 @@ export interface ServerToClientEvents extends Record<ServerEvents, Function> {
   [ServerEvents.TasksCreateFailure]: (msg: string) => void;
   [ServerEvents.BoardsUpdateSuccess]: (board: Board) => void;
   [ServerEvents.BoardsUpdateFailure]: (msg: string) => void;
+  [ServerEvents.BoardsDeleteSuccess]: () => void;
+  [ServerEvents.BoardsDeleteFailure]: (msg: string) => void;
 }
 
 export interface BoardsJoinInput {
@@ -44,6 +49,7 @@ export interface ClientToServerEvents extends Record<ClientEvents, Function> {
   [ClientEvents.ColumnsCreate]: (input: CreateColumnInput) => void;
   [ClientEvents.TasksCreate]: (input: CreateTaskInput) => void;
   [ClientEvents.BoardsUpdate]: (input: UpdateBoardInput) => void;
+  [ClientEvents.BoardsDelete]: (input: DeleteBoardInput) => void;
 }
 
 interface SocketData {

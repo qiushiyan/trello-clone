@@ -14,14 +14,14 @@
 <ng-template #form>
     <form class="flex gap-2 items-center bg-base-200 p-2 rounded-lg" (submit)="onSubmit($event)"
         [ngClass]="{'flex-col': !oneLine}">
-        <div>
+        <div class="w-full">
             <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"
-                [required]="field['required']" [type]="field['type']" [inline]="true"
+                [required]="field['required']" [type]="field['type']" [inline]="fields.length <= 1"
                 [placeholder]="field['placeholder']" [marginBottom]="fields.length > 1"></app-input>
         </div>
 
         <!-- actions, confirm on cancel -->
-        <div class="flex items-center justify-start" *ngIf="hasButton" [ngClass]="{'w-full': oneLine}">
+        <div class="flex items-center justify-start" *ngIf="hasButton" [ngClass]="{'w-full': oneLine || fullWidth}">
             <button class=" btn btn-accent text-sm sblock mr-2 normal-case p-3" *ngIf="hasButton"
                 (submit)="onSubmit($event)">Save</button>
             <span class="material-symbols-outlined cursor-pointer" (click)="cancel($event)">

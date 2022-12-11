@@ -49,7 +49,18 @@ export class BoardComponent implements OnInit {
   }>;
 
   createBoardFields: InlineFormFields = [
-    { name: 'title', defaultValue: 'Important', required: true, type: 'text' },
+    {
+      name: 'title',
+      defaultValue: 'board title',
+      required: true,
+      type: 'text',
+    },
+    {
+      name: 'description',
+      defaultValue: 'board description',
+      required: false,
+      type: 'textarea',
+    },
   ];
 
   updateBoardTitleField: InlineFormField = {
@@ -117,11 +128,26 @@ export class BoardComponent implements OnInit {
     this.socketService
       .listen<Board>(ServerEvents.BoardsUpdateSuccess)
       .subscribe({
-        next: (board) => this.boardService.setBoard(board),
+        next: (board) => {
+          this.boardService.setBoard(board);
+        },
         error: (err: HttpErrorResponse) => {
           this.error = err.message;
         },
       });
+
+    // delete board
+    this.socketService
+      .listen<void>(ServerEvents.BoardsDeleteSuccess)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/boards']);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
+
     this.initializeLeaveBoardListener();
   }
 
@@ -177,6 +203,21 @@ export class BoardComponent implements OnInit {
       fields: { description },
     };
     this.socketService.updateBoard(input);
+  }
+
+  updateBoard({ title, description }: { title: string; description: string }) {
+    const input: UpdateBoardInput = {
+      id: this.boardId,
+      fields: { title, description },
+    };
+    this.socketService.updateBoard(input);
+  }
+
+  deleteBoard(event: Event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to delete this board?')) {
+      this.socketService.deleteBoard({ id: this.boardId });
+    }
   }
 
   createColumn({ title }: { title: string }) {
