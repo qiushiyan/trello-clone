@@ -1,5 +1,4 @@
 <div class="board-container lg:grid lg:grid-cols-12 w-full p-5 min-h-screen">
-
     <!-- sidebar -->
     <div class="hidden lg:block lg:visible lg:col-span-2 lg:bordered p-1 lg:border-r-4">
         <h3 class="font-bold text-3xl mb-5" *ngIf="authService.currentUser$ | async as user">{{
@@ -12,7 +11,6 @@
         </select>
 
         <div *ngIf="data$ | async as data" class="my-5">
-
             <app-inline-oneline-form [field]="updateBoardTitleField" (handleSubmit)="updateBoardTitle($event)"
                 [defaultValue]="data.board?.title || ''">
                 <h3 class="text-2xl text-secondary mb-3 cursor-pointer hover:text-accent hover:scale-105 transition">{{
@@ -21,7 +19,7 @@
             <div *ngIf="data.board?.description">
                 <app-inline-oneline-form [field]="updateBoardDescriptionField"
                     (handleSubmit)="updateBoardDescription($event)" [defaultValue]="data.board?.description || ''">
-                    <markdown class="break-words cursor-pointer">{{ data.board?.description }}</markdown>
+                    <markdown [data]="data.board?.description" class="break-words"></markdown>
                 </app-inline-oneline-form>
             </div>
         </div>
@@ -66,4 +64,6 @@
             </div>
         </ng-container>
     </div>
+
 </div>
+<router-outlet></router-outlet>
