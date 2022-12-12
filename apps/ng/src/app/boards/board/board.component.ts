@@ -38,6 +38,7 @@ import { ColumnComponent } from '../column/column.component';
 import { TasksService } from 'src/app/services/tasks.service';
 import { InlineOnelineFormComponent } from 'src/app/components/inline-oneline-form/inline-oneline-form.component';
 import { MarkdownService, MarkdownModule } from 'ngx-markdown';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-board',
@@ -112,6 +113,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private taskServioce: TasksService,
     public authService: AuthService,
     private socketService: SocketService,
+    private titleService: Title,
     private markdownService: MarkdownService
   ) {
     this.boardId = this.route.snapshot.paramMap.get('boardId') as string;
@@ -250,6 +252,9 @@ export class BoardComponent implements OnInit, OnDestroy {
       next: (board) => {
         this.boardService.setBoard(board);
         this.updateBoardTitleField.defaultValue = board.title;
+        if (board) {
+          this.titleService.setTitle(`Trello | ${board.title}`);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.error = err.error.message;

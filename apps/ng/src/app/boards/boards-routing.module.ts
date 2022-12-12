@@ -9,6 +9,7 @@ const routes: Routes = [
       import('./board-grid/board-grid.component').then(
         (m) => m.BoardGridComponent
       ),
+    title: 'Trello | Boards',
   },
   {
     path: ':boardId',

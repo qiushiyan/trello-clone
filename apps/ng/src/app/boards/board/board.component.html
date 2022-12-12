@@ -1,6 +1,6 @@
 <div class="board-container lg:grid lg:grid-cols-12 w-full p-5 min-h-screen">
     <!-- sidebar -->
-    <div class="hidden lg:block lg:visible lg:col-span-2 lg:bordered p-1 lg:border-r-4">
+    <div class="hidden lg:block lg:visible lg:col-span-2 lg:bordered p-4 lg:border-r-4">
         <h3 class="font-bold text-3xl mb-5" *ngIf="authService.currentUser$ | async as user">{{
             user.username }}
         </h3>
@@ -41,11 +41,11 @@
 
 
     <!-- board -->
-    <div class="w-full lg:col-span-10">
+    <div class="w-full lg:col-span-10 pl-4">
         <app-alert *ngIf="error">{{ error }}</app-alert>
 
         <ng-container *ngIf="data$ | async as data">
-            <div class="grid grid-cols-5">
+            <div class="grid grid-cols-5 gap-2">
                 <div *ngFor="let column of data.columns">
                     <app-column [column]="column" [column]="column" [tasks]="getTasksByColumnId(data.tasks, column.id)">
                     </app-column>
