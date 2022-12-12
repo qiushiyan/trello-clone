@@ -17,6 +17,7 @@ import { InlineFormField } from 'src/app/types/inline-form.interface';
 import { InputComponent } from '../input/input.component';
 import { BoardService } from 'src/app/services/board.service';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inline-oneline-form',
@@ -35,7 +36,14 @@ export class InlineOnelineFormComponent implements OnInit, OnDestroy {
   form = new FormGroup({});
   subscription: Subscription | null = null;
 
-  constructor(private boardService: BoardService) {}
+  constructor(
+    private boardService: BoardService,
+    private route: ActivatedRoute
+  ) {
+    this.route.params.subscribe(() => {
+      this.isEditting = false;
+    });
+  }
 
   ngOnInit(): void {
     const validators = [];

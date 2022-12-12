@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 import { InlineFormFields } from 'src/app/types/inline-form.interface';
 import { InputComponent } from '../input/input.component';
@@ -36,7 +37,15 @@ export class InlineFormComponent implements OnInit {
 
   form = new FormGroup({});
 
-  constructor(private fb: FormBuilder, private boardService: BoardService) {}
+  constructor(
+    private fb: FormBuilder,
+    private boardService: BoardService,
+    private route: ActivatedRoute
+  ) {
+    this.route.paramMap.subscribe(() => {
+      this.isEditting = false;
+    });
+  }
 
   ngOnInit(): void {
     if (this.fullWidth) {

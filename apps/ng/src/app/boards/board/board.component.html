@@ -25,11 +25,12 @@
         </div>
 
         <div class="flex justify-evenly items-center">
-            <div class="dropdown dropdown-right dropdown-bottom">
+            <div class="dropdown dropdown-right"
+                [ngClass]="(data$ | async)?.board?.description?.length! > 10 ? 'dropdown-top' : 'dropdown-bottom'">
                 <label tabindex="0" class="btn m-1">Edit</label>
                 <div tabindex="0" class="dropdown-content menu shadow bg-base-300 rounded-box w-96 p-4">
                     <app-inline-form [fields]="createBoardFields" [alwaysEditting]="true" [fullWidth]="true"
-                        (handleSubmit)="updateBoard($event)" type="board">
+                        (handleSubmit)="updateBoard($event)" type="board" text="edit board">
                     </app-inline-form>
                 </div>
             </div>
