@@ -120,7 +120,7 @@ export const updateBoard = async (
 ) => {
   try {
     if (!socket.data.user) {
-      throw new Error("Log in to edit a board");
+      throw new Error("Log in to update a board");
     }
 
     const updatedBoard = await Board.findByIdAndUpdate(input.id, input.fields, {
@@ -145,7 +145,7 @@ export const deleteBoard = async (
 ) => {
   try {
     if (!socket.data.user) {
-      throw new Error("Log in to edit a board");
+      throw new Error("Log in to delete a board");
     }
 
     await Board.findOneAndDelete({ _id: input.id });

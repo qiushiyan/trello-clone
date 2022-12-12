@@ -20,6 +20,14 @@ export interface DeleteBoardInput {
   id: string;
 }
 
+export interface BoardsJoinInput {
+  boardId: string;
+}
+
+export interface BoardsLeaveInput {
+  boardId: string;
+}
+
 export interface UpdateBoardInput {
   id: string;
   fields: {

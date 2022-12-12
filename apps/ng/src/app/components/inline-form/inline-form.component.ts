@@ -26,7 +26,8 @@ export class InlineFormComponent implements OnInit {
   @Input() fullHeight = false;
   @Input() fullWidth = false;
   @Input() text = '';
-  @Input() type = 'board';
+  @Input() type!: 'board' | 'task' | 'column';
+  @Input() defaultValues: string[] = [];
   @Output() handleSubmit = new EventEmitter();
   isEditting = false;
   wrapperClass = '';
@@ -66,19 +67,25 @@ export class InlineFormComponent implements OnInit {
       this.form.addControl(field['name'], control);
     });
 
-    switch (this.type) {
-      case 'board':
-        this.boardService.board$.subscribe((board) => {
-          if (board) {
-            this.fields.forEach((field) => {
-              const fieldName = field.name as keyof typeof board;
-              this.controls[field.name].patchValue(board[fieldName]);
-            });
-          }
-        });
-        break;
-      default:
-        break;
+    if (this.defaultValues.length > 0) {
+      this.defaultValues.forEach((value, index) => {
+        this.controls[this.fields[index]['name']].patchValue(value);
+      });
+    } else {
+      switch (this.type) {
+        case 'board':
+          this.boardService.board$.subscribe((board) => {
+            if (board) {
+              this.fields.forEach((field) => {
+                const fieldName = field.name as keyof typeof board;
+                this.controls[field.name].patchValue(board[fieldName]);
+              });
+            }
+          });
+          break;
+        default:
+          break;
+      }
     }
   }
 

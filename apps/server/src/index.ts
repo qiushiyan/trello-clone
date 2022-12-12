@@ -40,20 +40,36 @@ io.use(socketioMiddleware).on("connection", (socket) => {
     BoardController.leaveBoard(io, socket, boardId);
   });
 
-  socket.on(ClientEvents.ColumnsCreate, (data) => {
-    ColumnController.create(io, socket, data);
-  });
-
-  socket.on(ClientEvents.TasksCreate, (data) => {
-    TaskController.create(io, socket, data);
-  });
-
   socket.on(ClientEvents.BoardsUpdate, (data) => {
     BoardController.updateBoard(io, socket, data);
   });
 
   socket.on(ClientEvents.BoardsDelete, (data) => {
     BoardController.deleteBoard(io, socket, data);
+  });
+
+  socket.on(ClientEvents.ColumnsCreate, (data) => {
+    ColumnController.create(io, socket, data);
+  });
+
+  socket.on(ClientEvents.ColumnsUpdate, (data) => {
+    ColumnController.update(io, socket, data);
+  });
+
+  socket.on(ClientEvents.ColumnsDelete, (data) => {
+    ColumnController.delete_(io, socket, data);
+  });
+
+  socket.on(ClientEvents.TasksCreate, (data) => {
+    TaskController.create(io, socket, data);
+  });
+
+  socket.on(ClientEvents.TasksUpdate, (data) => {
+    TaskController.update(io, socket, data);
+  });
+
+  socket.on(ClientEvents.TasksDelete, (data) => {
+    TaskController.delete_(io, socket, data);
   });
 });
 

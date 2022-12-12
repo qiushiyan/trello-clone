@@ -4,6 +4,8 @@ import {
   ServerEvents,
   SocketIOServer,
   SocketIOSocket,
+  DeleteColumnInput,
+  UpdateColumnInput,
 } from "@trello-clone/types";
 import { NextFunction, Request, Response } from "express";
 import { getErrorMessage } from "../helpers";
@@ -62,5 +64,63 @@ export const create = async (
     }
   } catch (err) {
     socket.emit(ServerEvents.ColumnCreateFailure, getErrorMessage(err));
+  }
+};
+
+export const update = async (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  input: UpdateColumnInput
+) => {
+  try {
+    if (socket.data.user) {
+      const column = await ColumnModel.findByIdAndUpdate(
+        input.id,
+        input.fields,
+        { new: true }
+      );
+      if (!column) {
+        throw new Error("Column not found");
+      }
+      io.to(column.boardId.toString()).emit(
+        ServerEvents.ColumnsUpdateSuccess,
+        normalizeColumn(column)
+      );
+    } else {
+      socket.emit(
+        ServerEvents.ColumnsUpdateFailure,
+        "Login to update a column"
+      );
+    }
+  } catch (err) {
+    socket.emit(ServerEvents.ColumnsUpdateFailure, getErrorMessage(err));
+  }
+};
+
+export const delete_ = async (
+  io: SocketIOServer,
+  socket: SocketIOSocket,
+  { id }: DeleteColumnInput
+) => {
+  try {
+    if (socket.data.user) {
+      const deletedColumn = await ColumnModel.findOneAndDelete({
+        _id: id,
+      });
+      if (!deletedColumn) {
+        throw new Error("Column not found");
+      }
+      io.to(deletedColumn.boardId.toString()).emit(
+        ServerEvents.ColumnsDeleteSuccess,
+        normalizeColumn(deletedColumn)
+      );
+    } else {
+      socket.emit(
+        ServerEvents.ColumnsDeleteFailure,
+        "Login to delete a column"
+      );
+    }
+  } catch (err) {
+    socket.emit(ServerEvents.ColumnsDeleteFailure, getErrorMessage(err));
   }
 };

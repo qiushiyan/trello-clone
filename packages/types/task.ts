@@ -21,3 +21,15 @@ export interface CreateTaskInput {
 export interface GetTasksInput {
   boardId: string;
 }
+export interface DeleteTaskInput {
+  id: string;
+}
+
+export interface UpdateTaskInput {
+  id: string;
+  fields: {
+    title?: string;
+    description?: string;
+    attachments?: string[];
+  };
+}

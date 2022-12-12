@@ -5,13 +5,14 @@
             user.username }}
         </h3>
         <div *ngIf="data$ | async as data" class="my-5">
-            <app-inline-oneline-form [field]="updateBoardTitleField" (handleSubmit)="updateBoardTitle($event)">
+            <app-inline-oneline-form [field]="updateBoardTitleField" (handleSubmit)="updateBoardTitle($event)"
+                [defaultValue]="data.board?.title || ''">
                 <h3 class="text-2xl text-secondary mb-3 cursor-pointer hover:text-accent hover:scale-105 transition">{{
                     data.board?.title}}</h3>
             </app-inline-oneline-form>
             <div *ngIf="data.board?.description">
                 <app-inline-oneline-form [field]="updateBoardDescriptionField"
-                    (handleSubmit)="updateBoardDescription($event)">
+                    (handleSubmit)="updateBoardDescription($event)" [defaultValue]="data.board?.description || ''">
                     <markdown class="break-words cursor-pointer">{{ data.board?.description }}</markdown>
                 </app-inline-oneline-form>
             </div>
@@ -22,7 +23,7 @@
                 <label tabindex="0" class="btn m-1">Edit</label>
                 <div tabindex="0" class="dropdown-content menu shadow bg-base-300 rounded-box w-96 p-4">
                     <app-inline-form [fields]="createBoardFields" [alwaysEditting]="true" [fullWidth]="true"
-                        (handleSubmit)="updateBoard($event)">
+                        (handleSubmit)="updateBoard($event)" type="board">
                     </app-inline-form>
                 </div>
             </div>
@@ -42,11 +43,18 @@
                     <app-column [column]="column" [column]="column" [tasks]="getTasksByColumnId(data.tasks, column.id)">
                     </app-column>
                 </div>
-                <div class="col-span-1 bordered rounded-lg m-2">
-                    <app-inline-form [fields]="createBoardFields" text="column" [oneLine]="true"
-                        (handleSubmit)="createColumn($event)" [hasButton]="false">
-                    </app-inline-form>
-                </div>
+                <app-inline-oneline-form [field]="createColumnField" type="column"
+                    (handleSubmit)="createColumn($event)">
+                    <div
+                        class="col-span-1 flex items-center p-4 bg-base-300 rounded-lg cursor-pointer hover:bg-accent hover:scale-105 duration-300 w-full">
+                        <span class="material-symbols-outlined cursor-pointer">
+                            add
+                        </span>
+                        new column
+                    </div>
+
+                </app-inline-oneline-form>
+
             </div>
         </ng-container>
     </div>

@@ -24,11 +24,31 @@ export class BoardService {
     this.columns$.next([...this.columns$.value, column]);
   }
 
+  updateColumn(column: Column) {
+    this.columns$.next(
+      this.columns$.value.map((c) => (c.id === column.id ? column : c))
+    );
+  }
+
+  deleteColumn(column: Column) {
+    this.columns$.next(this.columns$.value.filter((c) => c.id !== column.id));
+  }
+
   setTasks(tasks: Task[]) {
     this.tasks$.next(tasks);
   }
 
   addTask(task: Task) {
     this.tasks$.next([...this.tasks$.value, task]);
+  }
+
+  deleteTask(task: Task) {
+    this.tasks$.next(this.tasks$.value.filter((t) => t.id !== task.id));
+  }
+
+  updateTask(task: Task) {
+    this.tasks$.next(
+      this.tasks$.value.map((t) => (t.id === task.id ? task : t))
+    );
   }
 }

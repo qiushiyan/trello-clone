@@ -77,6 +77,13 @@ export class BoardComponent implements OnInit {
     type: 'textarea',
   };
 
+  createColumnField: InlineFormField = {
+    name: 'title',
+    defaultValue: '',
+    required: true,
+    type: 'text',
+  };
+
   error: string | null = null;
 
   constructor(
@@ -106,24 +113,6 @@ export class BoardComponent implements OnInit {
     this.fetchBoard(this.boardId);
     this.socketService.joinBoard({ boardId: this.boardId });
 
-    // create column
-    this.socketService
-      .listen<Column>(ServerEvents.ColumnCreateSuccess)
-      .subscribe({
-        next: (column) => this.boardService.addColumn(column),
-        error: (err: HttpErrorResponse) => {
-          this.error = err.message;
-        },
-      });
-
-    // create task
-    this.socketService.listen<Task>(ServerEvents.TasksCreateSuccess).subscribe({
-      next: (task) => this.boardService.addTask(task),
-      error: (err: HttpErrorResponse) => {
-        this.error = err.message;
-      },
-    });
-
     // update board
     this.socketService
       .listen<Board>(ServerEvents.BoardsUpdateSuccess)
@@ -147,6 +136,60 @@ export class BoardComponent implements OnInit {
           this.error = err.message;
         },
       });
+
+    // create column
+    this.socketService
+      .listen<Column>(ServerEvents.ColumnCreateSuccess)
+      .subscribe({
+        next: (column) => this.boardService.addColumn(column),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
+
+    // update column
+    this.socketService
+      .listen<Column>(ServerEvents.ColumnsUpdateSuccess)
+      .subscribe({
+        next: (column) => this.boardService.updateColumn(column),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
+
+    // delete column
+    this.socketService
+      .listen<Column>(ServerEvents.ColumnsDeleteSuccess)
+      .subscribe({
+        next: (column) => this.boardService.deleteColumn(column),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
+
+    // create task
+    this.socketService.listen<Task>(ServerEvents.TasksCreateSuccess).subscribe({
+      next: (task) => this.boardService.addTask(task),
+      error: (err: HttpErrorResponse) => {
+        this.error = err.message;
+      },
+    });
+
+    // update task
+    this.socketService.listen<Task>(ServerEvents.TasksUpdateSuccess).subscribe({
+      next: (task) => this.boardService.updateTask(task),
+      error: (err: HttpErrorResponse) => {
+        this.error = err.message;
+      },
+    });
+
+    // delete task
+    this.socketService.listen<Task>(ServerEvents.TasksDeleteSuccess).subscribe({
+      next: (task) => this.boardService.deleteTask(task),
+      error: (err: HttpErrorResponse) => {
+        this.error = err.message;
+      },
+    });
 
     this.initializeLeaveBoardListener();
   }

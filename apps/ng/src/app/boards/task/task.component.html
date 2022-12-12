@@ -1,3 +1,42 @@
-<div class="p-4 bg-base-300 rounded-lg cursor-pointer hover:bg-accent hover:scale-105 duration-300 w-full">
-    <h4>{{ task.title }}</h4>
+<div class="rounded-lg p-4 bg-base-300  w-full">
+    <div class="flex space-between w-full cursor-pointer" (click)="toggleDetails()">
+        <h4 class="cursor-pointer hover:text-accent duration-300 flex-1">{{ task.title }}</h4>
+        <div *ngIf="isExpandable">
+            <span class="material-symbols-outlined">
+                expand_more
+            </span>
+        </div>
+
+    </div>
+    <ng-container *ngIf="isExpanded">
+        <div class="mt-5">
+            <markdown>
+                {{ task.description}}
+            </markdown>
+            <div class="flex justify-end mt-5 gap-1">
+                <div class="dropdown dropdown-right dropdown-bottom">
+                    <label tabindex="0" class="btn btn-xs">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </label>
+                    <div tabindex="0" class="dropdown-content menu shadow bg-base-300 rounded-box w-96 p-4">
+                        <app-inline-form [fields]="updateTaskFields" [alwaysEditting]="true" [fullWidth]="true"
+                            (handleSubmit)="updateTask($event)" type="task"
+                            [defaultValues]="[task.title, task.description || '']">
+                        </app-inline-form>
+                    </div>
+                </div>
+                <button class="btn btn-xs" (click)="deleteTask()">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </ng-container>
 </div>
+
+<ng-template>
+
+</ng-template>

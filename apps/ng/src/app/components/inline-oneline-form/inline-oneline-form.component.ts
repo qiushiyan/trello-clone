@@ -19,6 +19,8 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class InlineOnelineFormComponent implements OnInit {
   @Input() field!: InlineFormField;
+  @Input() type: 'board' | 'task' | 'column' = 'board';
+  @Input() defaultValue = '';
   @Output() handleSubmit = new EventEmitter();
   isEditting = false;
   form = new FormGroup({});
@@ -39,12 +41,24 @@ export class InlineOnelineFormComponent implements OnInit {
       this.control.patchValue(this.field['defaultValue']);
     }
     this.form.addControl(this.field['name'], this.control);
-    this.boardService.board$.subscribe((board) => {
-      if (board) {
-        const fieldName = this.field.name as keyof typeof board;
-        this.control.patchValue(board[fieldName]);
+
+    if (this.defaultValue !== '') {
+      this.control.patchValue(this.defaultValue);
+    } else {
+      // fetch for default value
+      switch (this.type) {
+        case 'board':
+          this.boardService.board$.subscribe((board) => {
+            if (board) {
+              const fieldName = this.field.name as keyof typeof board;
+              this.control.patchValue(board[fieldName]);
+            }
+          });
+          break;
+        default:
+          break;
       }
-    });
+    }
   }
 
   onSubmit(event: SubmitEvent) {

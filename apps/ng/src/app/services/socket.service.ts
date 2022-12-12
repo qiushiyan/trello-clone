@@ -11,6 +11,10 @@ import {
   CreateTaskInput,
   UpdateBoardInput,
   DeleteBoardInput,
+  DeleteColumnInput,
+  UpdateColumnInput,
+  DeleteTaskInput,
+  UpdateTaskInput,
 } from '@trello-clone/types';
 import { Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -68,7 +72,23 @@ export class SocketService {
     this.socket?.emit(ClientEvents.ColumnsCreate, input);
   }
 
+  deleteColumn(input: DeleteColumnInput) {
+    this.socket?.emit(ClientEvents.ColumnsDelete, input);
+  }
+
+  updateColumn(input: UpdateColumnInput) {
+    this.socket?.emit(ClientEvents.ColumnsUpdate, input);
+  }
+
   createTask(input: CreateTaskInput) {
     this.socket?.emit(ClientEvents.TasksCreate, input);
+  }
+
+  updateTask(input: UpdateTaskInput) {
+    this.socket?.emit(ClientEvents.TasksUpdate, input);
+  }
+
+  deleteTask(input: DeleteTaskInput) {
+    this.socket?.emit(ClientEvents.TasksDelete, input);
   }
 }

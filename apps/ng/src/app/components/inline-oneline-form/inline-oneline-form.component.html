@@ -7,7 +7,7 @@
 <ng-template #form>
     <form class="flex gap-2 items-center bg-base-200 p-2 rounded-lg" (submit)="onSubmit($event)">
         <div>
-            <app-input [name]="field['name']" [field]="control" [type]="field['type']" [inline]="true"
+            <app-input [field]="control" [name]="field['name']" [type]="field['type']" [inline]="true"
                 [placeholder]="field['placeholder']" [required]="field['required']"></app-input>
         </div>
     </form>

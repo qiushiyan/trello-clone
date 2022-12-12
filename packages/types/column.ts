@@ -13,7 +13,17 @@ export interface CreateColumnInput {
   title: string;
 }
 
-// only
+export interface DeleteColumnInput {
+  id: string;
+}
+
+export interface UpdateColumnInput {
+  id: string;
+  fields: {
+    title?: string;
+  };
+}
+
 export interface GetColumnInput {
   boardId: string;
 }
