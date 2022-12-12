@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { AuthService } from './services/auth.service';
 import { SocketService } from './services/socket.service';
 
@@ -8,8 +9,9 @@ import { SocketService } from './services/socket.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'trello-clone';
+  userSubscription: Subscription | null = null;
 
   constructor(
     private authService: AuthService,
@@ -17,7 +19,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe({
+    this.userSubscription = this.authService.getCurrentUser().subscribe({
       next: (currentUser) => {
         this.authService.setToken(currentUser.token);
         this.authService.setCurrentUser(currentUser);
@@ -27,5 +29,10 @@ export class AppComponent implements OnInit {
         this.authService.setCurrentUser(null);
       }, // unauthenticated
     });
+  }
+
+  ngOnDestroy(): void {
+    this.socketService.disconnect();
+    this.userSubscription?.unsubscribe();
   }
 }

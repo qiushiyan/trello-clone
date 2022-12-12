@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BoardsService } from 'src/app/services/boards.service';
 import {
@@ -18,7 +18,7 @@ import {
   InlineFormFields,
 } from 'src/app/types/inline-form.interface';
 import { BoardService } from 'src/app/services/board.service';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
 import { ColumnsService } from 'src/app/services/columns.service';
 import { ColumnComponent } from '../column/column.component';
@@ -40,13 +40,15 @@ import { MarkdownService, MarkdownModule } from 'ngx-markdown';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   boardId: string;
   data$: Observable<{
     board: Board | null;
     columns: Column[];
     tasks: Task[];
   }>;
+
+  unsubscribe$ = new Subject<void>();
 
   createBoardFields: InlineFormFields = [
     {
@@ -116,6 +118,7 @@ export class BoardComponent implements OnInit {
     // update board
     this.socketService
       .listen<Board>(ServerEvents.BoardsUpdateSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (board) => {
           this.boardService.setBoard(board);
@@ -128,6 +131,7 @@ export class BoardComponent implements OnInit {
     // delete board
     this.socketService
       .listen<void>(ServerEvents.BoardsDeleteSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: () => {
           this.router.navigate(['/boards']);
@@ -140,6 +144,7 @@ export class BoardComponent implements OnInit {
     // create column
     this.socketService
       .listen<Column>(ServerEvents.ColumnCreateSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (column) => this.boardService.addColumn(column),
         error: (err: HttpErrorResponse) => {
@@ -150,6 +155,7 @@ export class BoardComponent implements OnInit {
     // update column
     this.socketService
       .listen<Column>(ServerEvents.ColumnsUpdateSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (column) => this.boardService.updateColumn(column),
         error: (err: HttpErrorResponse) => {
@@ -160,6 +166,7 @@ export class BoardComponent implements OnInit {
     // delete column
     this.socketService
       .listen<Column>(ServerEvents.ColumnsDeleteSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (column) => this.boardService.deleteColumn(column),
         error: (err: HttpErrorResponse) => {
@@ -168,30 +175,44 @@ export class BoardComponent implements OnInit {
       });
 
     // create task
-    this.socketService.listen<Task>(ServerEvents.TasksCreateSuccess).subscribe({
-      next: (task) => this.boardService.addTask(task),
-      error: (err: HttpErrorResponse) => {
-        this.error = err.message;
-      },
-    });
+    this.socketService
+      .listen<Task>(ServerEvents.TasksCreateSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (task) => this.boardService.addTask(task),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
 
     // update task
-    this.socketService.listen<Task>(ServerEvents.TasksUpdateSuccess).subscribe({
-      next: (task) => this.boardService.updateTask(task),
-      error: (err: HttpErrorResponse) => {
-        this.error = err.message;
-      },
-    });
+    this.socketService
+      .listen<Task>(ServerEvents.TasksUpdateSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (task) => this.boardService.updateTask(task),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
 
     // delete task
-    this.socketService.listen<Task>(ServerEvents.TasksDeleteSuccess).subscribe({
-      next: (task) => this.boardService.deleteTask(task),
-      error: (err: HttpErrorResponse) => {
-        this.error = err.message;
-      },
-    });
+    this.socketService
+      .listen<Task>(ServerEvents.TasksDeleteSuccess)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (task) => this.boardService.deleteTask(task),
+        error: (err: HttpErrorResponse) => {
+          this.error = err.message;
+        },
+      });
 
     this.initializeLeaveBoardListener();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   initializeLeaveBoardListener() {

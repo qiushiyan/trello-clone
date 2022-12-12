@@ -21,6 +21,7 @@ export interface CreateTaskInput {
 export interface GetTasksInput {
   boardId: string;
 }
+
 export interface DeleteTaskInput {
   id: string;
 }

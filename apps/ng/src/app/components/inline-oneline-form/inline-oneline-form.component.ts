@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -9,6 +16,7 @@ import {
 import { InlineFormField } from 'src/app/types/inline-form.interface';
 import { InputComponent } from '../input/input.component';
 import { BoardService } from 'src/app/services/board.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-inline-oneline-form',
@@ -17,14 +25,15 @@ import { BoardService } from 'src/app/services/board.service';
   templateUrl: './inline-oneline-form.component.html',
   styleUrls: ['./inline-oneline-form.component.scss'],
 })
-export class InlineOnelineFormComponent implements OnInit {
+export class InlineOnelineFormComponent implements OnInit, OnDestroy {
   @Input() field!: InlineFormField;
   @Input() type: 'board' | 'task' | 'column' = 'board';
   @Input() defaultValue = '';
   @Output() handleSubmit = new EventEmitter();
   isEditting = false;
-  form = new FormGroup({});
   control!: FormControl;
+  form = new FormGroup({});
+  subscription: Subscription | null = null;
 
   constructor(private boardService: BoardService) {}
 
@@ -48,7 +57,7 @@ export class InlineOnelineFormComponent implements OnInit {
       // fetch for default value
       switch (this.type) {
         case 'board':
-          this.boardService.board$.subscribe((board) => {
+          this.subscription = this.boardService.board$.subscribe((board) => {
             if (board) {
               const fieldName = this.field.name as keyof typeof board;
               this.control.patchValue(board[fieldName]);
@@ -58,6 +67,12 @@ export class InlineOnelineFormComponent implements OnInit {
         default:
           break;
       }
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
   }
 
