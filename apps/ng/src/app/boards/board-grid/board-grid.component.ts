@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router, RouterModule } from '@angular/router';
@@ -8,6 +8,8 @@ import { Board, CreateBoardInput } from '@trello-clone/types';
 import { BoardComponent } from '../board/board.component';
 import { InlineFormComponent } from 'src/app/components/inline-form/inline-form.component';
 import { BoardCardComponent } from '../board-card/board-card.component';
+import { Observable, Subscription } from 'rxjs';
+import { AlertComponent } from 'src/app/components/alert/alert.component';
 
 @Component({
   selector: 'app-board-grid',
@@ -18,12 +20,15 @@ import { BoardCardComponent } from '../board-card/board-card.component';
     InlineFormComponent,
     BoardCardComponent,
     RouterModule,
+    AlertComponent,
   ],
   templateUrl: './board-grid.component.html',
   styleUrls: ['./board-grid.component.scss'],
 })
-export class BoardGridComponent implements OnInit {
+export class BoardGridComponent implements OnInit, OnDestroy {
   boards: Board[] = [];
+  boardsSubscription: Subscription;
+  error: string | null = null;
   createBoardFields: InlineFormFields = [
     {
       name: 'title',
@@ -37,12 +42,17 @@ export class BoardGridComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private boardsService: BoardsService
-  ) {}
-
-  ngOnInit(): void {
-    this.boardsService.gaetBoards().subscribe((boards) => {
-      this.boards = boards;
+  ) {
+    this.boardsSubscription = this.boardsService.getBoards().subscribe({
+      next: (boards) => (this.boards = boards),
+      error: (err) => (this.error = String(err)),
     });
+  }
+
+  ngOnInit(): void {}
+
+  ngOnDestroy(): void {
+    this.boardsSubscription.unsubscribe();
   }
 
   logout(e: Event) {
@@ -53,7 +63,7 @@ export class BoardGridComponent implements OnInit {
 
   createBoard(input: CreateBoardInput) {
     this.boardsService.createBoard(input).subscribe((board) => {
-      this.boards.push(board);
+      this.boards = [...this.boards, board];
     });
   }
 }

@@ -8,9 +8,8 @@ import { Board, CreateBoardInput } from '@trello-clone/types';
 })
 export class BoardsService {
   constructor(private http: HttpClient) {}
-  boards: Board[] = [];
 
-  gaetBoards() {
+  getBoards() {
     return this.http.get<[]>(environment.api.boards.getBoardsUrl);
   }
 

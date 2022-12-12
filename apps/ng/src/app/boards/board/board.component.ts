@@ -8,7 +8,12 @@ import {
   Task,
   UpdateBoardInput,
 } from '@trello-clone/types';
-import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationStart,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { AlertComponent } from 'src/app/components/alert/alert.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
@@ -18,7 +23,15 @@ import {
   InlineFormFields,
 } from 'src/app/types/inline-form.interface';
 import { BoardService } from 'src/app/services/board.service';
-import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  lastValueFrom,
+  map,
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { SocketService } from 'src/app/services/socket.service';
 import { ColumnsService } from 'src/app/services/columns.service';
 import { ColumnComponent } from '../column/column.component';
@@ -36,6 +49,7 @@ import { MarkdownService, MarkdownModule } from 'ngx-markdown';
     ColumnComponent,
     InlineOnelineFormComponent,
     MarkdownModule,
+    RouterModule,
   ],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
@@ -48,6 +62,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     tasks: Task[];
   }>;
 
+  boards$: Observable<Board[]>;
   unsubscribe$ = new Subject<void>();
 
   createBoardFields: InlineFormFields = [
@@ -100,6 +115,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     private markdownService: MarkdownService
   ) {
     this.boardId = this.route.snapshot.paramMap.get('boardId') as string;
+    this.boards$ = this.boardsService.getBoards();
     this.data$ = combineLatest([
       this.boardService.board$,
       this.boardService.columns$,
@@ -112,8 +128,11 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fetchBoard(this.boardId);
-    this.socketService.joinBoard({ boardId: this.boardId });
+    this.route.paramMap.subscribe((params) => {
+      this.boardId = this.route.snapshot.paramMap.get('boardId') as string;
+      this.fetchBoard(this.boardId);
+      this.socketService.joinBoard({ boardId: this.boardId });
+    });
 
     // update board
     this.socketService
@@ -217,7 +236,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   initializeLeaveBoardListener() {
     this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
+      if (event instanceof NavigationStart && !event.url.includes('/boards/')) {
         this.socketService.leaveBoard({ boardId: this.boardId });
         this.boardService.setBoard(null);
         this.boardService.setColumns([]);
@@ -254,6 +273,14 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.error = err.error.message;
       },
     });
+  }
+
+  async switchBoard(boardTitle: string) {
+    const boards = await lastValueFrom(this.boards$);
+    const board = boards.find((board) => board.title === boardTitle);
+    if (board) {
+      this.router.navigate(['/boards', board.id]);
+    }
   }
 
   updateBoardTitle({ title }: { title: string }) {

@@ -1,9 +1,10 @@
 <div class="boards-container max-w-6xl min-h-screen mx-auto">
     <div class="flex justify-between mb-5">
         <h2 class="font-bold text-3xl mb-5">My boards</h2>
+        <app-alert *ngIf="error">{{ error }} </app-alert>
         <button class="btn btn-info" (click)="logout($event)">logout</button>
     </div>
-    <div class="boards-grid w-full grid grid-cols-4 gap-4">
+    <div class="boards-grid w-full grid grid-cols-4 gap-4" *ngIf="!error">
         <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
             [hasButton]="false" [fullHeight]="true" text="Create new board">
         </app-inline-form>
@@ -11,12 +12,4 @@
         </app-board-card>
     </div>
 
-    <div class="dropdown dropdown-right dropdown-end">
-        <label tabindex="0" class="btn m-1">Click</label>
-        <div tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-80">
-            <app-inline-form [fields]="createBoardFields" [alwaysEditting]="true" (handleSubmit)="createBoard($event)">
-                <p>hello world</p>
-            </app-inline-form>
-        </div>
-    </div>
 </div>
