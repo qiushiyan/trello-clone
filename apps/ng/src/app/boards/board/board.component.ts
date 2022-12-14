@@ -327,4 +327,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   getTasksByColumnId(tasks: Task[], columnId: string): Task[] {
     return tasks.filter((task) => task.columnId === columnId);
   }
+
+  trackByFn(index: number, item: Column) {
+    return item.id;
+  }
 }

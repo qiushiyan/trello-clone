@@ -78,4 +78,8 @@ export class ColumnComponent {
       columnId: this.column.id,
     });
   }
+
+  trackByFn(index: number, item: Task) {
+    return item.id;
+  }
 }

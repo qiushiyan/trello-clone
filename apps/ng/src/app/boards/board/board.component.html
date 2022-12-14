@@ -46,7 +46,7 @@
 
         <ng-container *ngIf="data$ | async as data">
             <div class="grid grid-cols-5 gap-2">
-                <div *ngFor="let column of data.columns">
+                <div *ngFor="let column of data.columns; trackBy: trackByFn">
                     <app-column [column]="column" [column]="column" [tasks]="getTasksByColumnId(data.tasks, column.id)">
                     </app-column>
                 </div>

@@ -66,4 +66,8 @@ export class BoardGridComponent implements OnInit, OnDestroy {
       this.boards = [...this.boards, board];
     });
   }
+
+  trackByFn(index: number, board: Board) {
+    return board.id;
+  }
 }

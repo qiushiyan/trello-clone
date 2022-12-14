@@ -1,5 +1,5 @@
 <div [class]="wrapperClass" [ngClass]="{'h-full': fullHeight, 'w-full': fullWidth}" (click)="activeEditting()">
-    <ng-container *ngIf="!isEditting; else form">
+    <ng-container *ngIf="!isEditting; else inlineForm">
         <div class="p-4 bg-base-300 rounded-lg cursor-pointer hover:bg-accent hover:scale-105 duration-300 w-full">
             <div class="flex items-center">
                 <span class="material-symbols-outlined">
@@ -11,8 +11,8 @@
     </ng-container>
 </div>
 
-<ng-template #form>
-    <form class="flex gap-2 items-center bg-base-200 p-2 rounded-lg" (submit)="onSubmit($event)"
+<ng-template #inlineForm>
+    <form class="flex gap-2 items-center bg-base-200 p-2 rounded-lg" [formGroup]="form" (submit)="onSubmit($event)"
         [ngClass]="{'flex-col': !oneLine}">
         <div class="w-full">
             <app-input *ngFor="let field of fields" [name]="field['name']" [field]="controls[field['name']]"

@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="flex flex-col gap-4 my-2">
-        <app-task *ngFor="let task of tasks" [task]="task"></app-task>
+        <app-task *ngFor="let task of tasks; trackBy: trackByFn" [task]="task"></app-task>
         <app-inline-form [fields]="createTaskFields" text="task" [oneLine]="true" (handleSubmit)="createTask($event)"
             [hasButton]="false" [fullWidth]="true" type="column">
         </app-inline-form>

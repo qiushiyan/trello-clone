@@ -8,7 +8,8 @@
         <app-inline-form class="w-64" [fields]="createBoardFields" (handleSubmit)="createBoard($event)"
             [hasButton]="false" [fullHeight]="true" text="Create new board">
         </app-inline-form>
-        <app-board-card *ngFor="let board of boards" [title]="board.title" [routerLink]="['/boards', board.id]">
+        <app-board-card *ngFor="let board of boards; trackBy: trackByFn" [title]="board.title"
+            [routerLink]="['/boards', board.id]">
         </app-board-card>
     </div>
 
